@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h2 class="card-title text-center mb-4">Rate Your Experience</h2>
+                    <p class="text-muted text-center mb-4">How was your service with <b>{{
+                            booking.professional.user.username }}</b> for <b>{{ booking.service.name }}</b>?</p>
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3 text-center">
+                            <label class="form-label d-block fw-bold mb-3">Rating</label>
+                            <div class="btn-group w-100" role="group">
+                                <input type="radio" class="btn-check" name="rating" id="r1" value="1" required>
+                                <label class="btn btn-outline-warning" for="r1">1 ★</label>
+                                <input type="radio" class="btn-check" name="rating" id="r2" value="2">
+                                <label class="btn btn-outline-warning" for="r2">2 ★</label>
+                                <input type="radio" class="btn-check" name="rating" id="r3" value="3">
+                                <label class="btn btn-outline-warning" for="r3">3 ★</label>
+                                <input type="radio" class="btn-check" name="rating" id="r4" value="4">
+                                <label class="btn btn-outline-warning" for="r4">4 ★</label>
+                                <input type="radio" class="btn-check" name="rating" id="r5" value="5" checked>
+                                <label class="btn btn-outline-warning" for="r5">5 ★</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="comment" class="form-label fw-bold">Your Feedback</label>
+                            <textarea name="comment" id="comment" class="form-control" rows="4"
+                                placeholder="What did you like or what could be improved?" required></textarea>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">Submit Review</button>
+                            <a href="{% url 'customer_bookings' %}" class="btn btn-outline-secondary">Back to
+                                Bookings</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

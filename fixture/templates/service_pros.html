@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">Available Professionals for {{ service.name }}</h2>
+    <p class="text-muted mb-5">Book a verified professional for your {{ service.name }} needs. Base price: ${{
+        service.base_price }}</p>
+
+    <div class="row">
+        {% for pro in professionals %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">{{ pro.user.username }}</h5>
+                    <div class="mb-2">
+                        <span class="badge bg-success">Safety Score: {{ pro.safety_score }}</span>
+                        <span class="text-muted small">| {{ pro.experience_years }} yrs Exp</span>
+                    </div>
+                    <p class="card-text small text-muted">{{ pro.bio|truncatechars:150 }}</p>
+                    <a href="{% url 'book_professional' pro.id %}?service={{ service.id }}"
+                        class="btn btn-primary btn-sm">Book Now</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="text-center py-5">No professionals found for this service yet.</p>
+            <div class="text-center">
+                <a href="{% url 'home' %}" class="btn btn-outline-secondary">Back to Home</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

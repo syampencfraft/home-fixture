@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container text-center py-5">
+    <h1 class="display-4 fw-bold">Fix it. Clean it. HomeFixr it.</h1>
+    <p class="lead">Book verified professionals for your home needs.</p>
+
+    <!-- Service Categories Grid -->
+    <div class="row mt-5">
+        <h3 class="text-start mb-4">Our Categories</h3>
+        {% for category in categories %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm border-0 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">{{ category.name }}</h5>
+                    <p class="card-text text-muted small">{{ category.description }}</p>
+                    <a href="{% url 'category_professionals' category.id %}"
+                        class="btn btn-outline-primary btn-sm">Explore</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No categories available.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Popular Services -->
+    <div class="row mt-5 text-start">
+        <h3 class="mb-4">Popular Services</h3>
+        {% for service in services %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">{{ service.name }}</h5>
+                    <p class="text-muted small mb-2">{{ service.category.name }}</p>
+                    <p class="fw-bold text-primary mb-3">${{ service.base_price }}</p>
+                    <a href="{% url 'service_professionals' service.id %}"
+                        class="btn btn-sm btn-outline-primary w-100">Book Now</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center">No specific services listed yet.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Recommended Professionals -->
+    <div class="row mt-5 text-start">
+        <h3 class="mb-4">Recommended Professionals</h3>
+        {% for pro in top_pros %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">{{ pro.user.username }}</h5>
+                    <span class="badge bg-info text-dark mb-2">{{ pro.category.name }}</span>
+                    <div class="mb-2">
+                        <span class="badge bg-success">Safety Score: {{ pro.safety_score }}</span>
+                        <span class="text-muted small">| {{ pro.experience_years }} yrs Exp</span>
+                    </div>
+                    <p class="card-text small text-muted">{{ pro.bio|truncatechars:100 }}</p>
+                    <a href="{% url 'book_professional' pro.id %}" class="btn btn-primary btn-sm">Book Now</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

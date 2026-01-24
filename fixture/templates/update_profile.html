@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Manage Your Professional Profile</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6 text-center">
+                            {% if profile.profile_picture %}
+                                <img src="{{ profile.profile_picture.url }}" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
+                            {% else %}
+                                <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 150px; height: 150px;">
+                                    No Image
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><b>Verification Status:</b></label>
+                            <p>
+                                {% if profile.is_verified %}
+                                    <span class="badge bg-success">Verified Professional</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">Pending Verification</span>
+                                {% endif %}
+                            </p>
+                            <label class="form-label"><b>Safety Score:</b></label>
+                            <h3>{{ profile.safety_score }}%</h3>
+                        </div>
+                    </div>
+
+                    {{ form.as_p }}
+
+                    <hr>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success btn-lg">Save Profile Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
