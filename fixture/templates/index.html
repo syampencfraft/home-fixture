@@ -1,71 +1,38 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<!-- Hero Section -->
-<div class="row align-items-center mb-5 py-5">
-    <div class="col-lg-6">
-        <h1 class="display-4 fw-bold lh-1 mb-3">Expert Home Services at Your Fingertips</h1>
-        <p class="lead text-muted mb-4">Find trusted plumbers, electricians, and more. Or join our network of skilled
-            professionals today to grow your business.</p>
-        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-            <a href="{% url 'register' %}" class="btn btn-primary btn-lg px-4 me-md-2">Get Started</a>
-            <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-lg px-4">Log In</a>
-        </div>
-    </div>
-    <div class="col-lg-6">
-        <!-- Using a reliable placeholder service, or text if offline -->
-        <div class="p-5 bg-light rounded-3 shadow-sm text-center border">
-            <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor"
-                class="bi bi-house-check text-primary mb-3" viewBox="0 0 16 16">
-                <path
-                    d="M7.293 1.5a1 1 0 0 1 1.414 0L11 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l2.354 2.353a.5.5 0 0 1-.708.708L8 2.207l-5 5H1a.5.5 0 0 1 0-1h1.11L7.293 1.5Z" />
-                <path
-                    d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.5.5 1.057-1.764a.5.5 0 0 1 .818.375Z" />
-            </svg>
-            <h3>Your Home, Our Priority</h3>
-            <p class="text-muted">Connecting you with the best locals.</p>
-        </div>
-    </div>
+d="M5.338 4.226a.25.25 0 0 1 .15.062l.307.275 6.856-8.57 1.057.817L6.643 6.175a.502.502 0 0 1-.726-.034l-2.029-2.227
+1.45-1.688z" />
+<path
+    d="M11.5 5.5v1.61c0 2.541-1.466 4.793-3.782 5.811l-.718.332-.718-.332C4.466 11.903 3 9.65 3 7.11V5.5h8.5zM6.5 2h8a.5.5 0 0 1 .5.5V5h-9V2.5a.5.5 0 0 1 .5-.5z" />
+</svg>
 </div>
-
-<!-- Features Section -->
-<div class="row g-4 py-5 row-cols-1 row-cols-lg-3 border-top">
-    <div class="col">
-        <div class="feature-icon bg-primary bg-gradient text-white rounded-3 p-3 mb-3 d-inline-block">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                class="bi bi-shield-check" viewBox="0 0 16 16">
-                <path
-                    d="M5.338 4.226a.25.25 0 0 1 .15.062l.307.275 6.856-8.57 1.057.817L6.643 6.175a.502.502 0 0 1-.726-.034l-2.029-2.227 1.45-1.688z" />
-                <path
-                    d="M11.5 5.5v1.61c0 2.541-1.466 4.793-3.782 5.811l-.718.332-.718-.332C4.466 11.903 3 9.65 3 7.11V5.5h8.5zM6.5 2h8a.5.5 0 0 1 .5.5V5h-9V2.5a.5.5 0 0 1 .5-.5z" />
-            </svg>
-        </div>
-        <h3>Verified Pros</h3>
-        <p>Every professional on our platform is vetted for safety and quality. Check reviews and ratings before you
-            hire.</p>
+<h3>Verified Pros</h3>
+<p>Every professional on our platform is vetted for safety and quality. Check reviews and ratings before you
+    hire.</p>
+</div>
+<div class="col">
+    <div class="feature-icon bg-primary bg-gradient text-white rounded-3 p-3 mb-3 d-inline-block">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-clock-history"
+            viewBox="0 0 16 16">
+            <path
+                d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022l-.074.997zm2.004.45a7.003 7.003 0 0 0-.985-.299l.219-.976c.383.086.76.2 1.126.342l-.36.933zm1.37.71a7.01 7.01 0 0 0-.439-.27l.493-.87a8.025 8.025 0 0 1 .979.654l-.615.789a6.996 6.996 0 0 0-.418-.302zm1.834 1.79a6.99 6.99 0 0 0-.653-.796l.724-.69c.27.28.52.581.749.901l-.82.585zM14.71 6.312a6.983 6.983 0 0 0-.223-.526l.913-.426a8.036 8.036 0 0 1 .496 1.168l-.946.36a7.007 7.007 0 0 0-.24-.576zm-.22 2.628a6.99 6.99 0 0 0 .16-.606l.98.243a8.03 8.03 0 0 1-.36 1.353l-.936-.34a7.006 7.006 0 0 0-.156-.65h.001zM13.25 11.43a7 7 0 0 0 .522-.876l.854.516a8.006 8.006 0 0 1-.958 1.49l-.736-.665a6.99 6.99 0 0 0 .318-.465zm-1.583 1.956a6.986 6.986 0 0 0 .762-.519l.61.792a7.994 7.994 0 0 1-1.393.949l-.427-.927a7.005 7.005 0 0 0 .448-.295zM8.5 14.98a6.998 6.998 0 0 0 1.1-.144l.27 1a7.993 7.993 0 0 1-2.924 0l.27-1c.36.096.732.144 1.108.144h.166zm-2.09-.27a7.003 7.003 0 0 0 1.096.223l-.15 1a8.01 8.01 0 0 1-.976-.17l.03-1ZM4.444 13.91a6.974 6.974 0 0 0 .866.602l-.52.855a7.979 7.979 0 0 1-1.282-.89l.63-.86c.264.269.544.509.833.717l-.527-.424zM3.1 11.756a6.984 6.984 0 0 0-.496.791l-.865-.494a7.997 7.997 0 0 1 .904-1.442l.73.664a7.005 7.005 0 0 0-.273.481zM2.5 8a6.97 6.97 0 0 0 .157 1.465l-.973.275a7.97 7.97 0 0 1 .006-3.483l.972.274A6.974 6.974 0 0 0 2.5 8zm.456-2.973a6.984 6.984 0 0 0-.244.576l-.946-.36a8.034 8.034 0 0 1 .496-1.168l.913.426c.21.238.397.495.556.768a6.995 6.995 0 0 0-.775-.242zm2.348-2.61a7.001 7.001 0 0 0-1.127.342l-.22-.976a8 8 0 0 1 1.764-.53l-.417.864zM8.5 2.5a.5.5 0 0 0-1 0v5.793L5.354 6.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 8.293V2.5z" />
+        </svg>
     </div>
-    <div class="col">
-        <div class="feature-icon bg-primary bg-gradient text-white rounded-3 p-3 mb-3 d-inline-block">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                class="bi bi-clock-history" viewBox="0 0 16 16">
-                <path
-                    d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022l-.074.997zm2.004.45a7.003 7.003 0 0 0-.985-.299l.219-.976c.383.086.76.2 1.126.342l-.36.933zm1.37.71a7.01 7.01 0 0 0-.439-.27l.493-.87a8.025 8.025 0 0 1 .979.654l-.615.789a6.996 6.996 0 0 0-.418-.302zm1.834 1.79a6.99 6.99 0 0 0-.653-.796l.724-.69c.27.28.52.581.749.901l-.82.585zM14.71 6.312a6.983 6.983 0 0 0-.223-.526l.913-.426a8.036 8.036 0 0 1 .496 1.168l-.946.36a7.007 7.007 0 0 0-.24-.576zm-.22 2.628a6.99 6.99 0 0 0 .16-.606l.98.243a8.03 8.03 0 0 1-.36 1.353l-.936-.34a7.006 7.006 0 0 0-.156-.65h.001zM13.25 11.43a7 7 0 0 0 .522-.876l.854.516a8.006 8.006 0 0 1-.958 1.49l-.736-.665a6.99 6.99 0 0 0 .318-.465zm-1.583 1.956a6.986 6.986 0 0 0 .762-.519l.61.792a7.994 7.994 0 0 1-1.393.949l-.427-.927a7.005 7.005 0 0 0 .448-.295zM8.5 14.98a6.998 6.998 0 0 0 1.1-.144l.27 1a7.993 7.993 0 0 1-2.924 0l.27-1c.36.096.732.144 1.108.144h.166zm-2.09-.27a7.003 7.003 0 0 0 1.096.223l-.15 1a8.01 8.01 0 0 1-.976-.17l.03-1ZM4.444 13.91a6.974 6.974 0 0 0 .866.602l-.52.855a7.979 7.979 0 0 1-1.282-.89l.63-.86c.264.269.544.509.833.717l-.527-.424zM3.1 11.756a6.984 6.984 0 0 0-.496.791l-.865-.494a7.997 7.997 0 0 1 .904-1.442l.73.664a7.005 7.005 0 0 0-.273.481zM2.5 8a6.97 6.97 0 0 0 .157 1.465l-.973.275a7.97 7.97 0 0 1 .006-3.483l.972.274A6.974 6.974 0 0 0 2.5 8zm.456-2.973a6.984 6.984 0 0 0-.244.576l-.946-.36a8.034 8.034 0 0 1 .496-1.168l.913.426c.21.238.397.495.556.768a6.995 6.995 0 0 0-.775-.242zm2.348-2.61a7.001 7.001 0 0 0-1.127.342l-.22-.976a8 8 0 0 1 1.764-.53l-.417.864zM8.5 2.5a.5.5 0 0 0-1 0v5.793L5.354 6.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 8.293V2.5z" />
-            </svg>
-        </div>
-        <h3>Quick Service</h3>
-        <p>Book appointments that fit your schedule. Our pros are helping homeowners like you every day.</p>
+    <h3>Quick Service</h3>
+    <p>Book appointments that fit your schedule. Our pros are helping homeowners like you every day.</p>
+</div>
+<div class="col">
+    <div class="feature-icon bg-primary bg-gradient text-white rounded-3 p-3 mb-3 d-inline-block">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-tag"
+            viewBox="0 0 16 16">
+            <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0z" />
+            <path
+                d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1zm0 5.586 7 7L13.586 9l-7-7H2v4.586z" />
+        </svg>
     </div>
-    <div class="col">
-        <div class="feature-icon bg-primary bg-gradient text-white rounded-3 p-3 mb-3 d-inline-block">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-tag"
-                viewBox="0 0 16 16">
-                <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0z" />
-                <path
-                    d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1zm0 5.586 7 7L13.586 9l-7-7H2v4.586z" />
-            </svg>
-        </div>
-        <h3>Transparent Pricing</h3>
-        <p>No hidden fees. Get fair quotes for the work you need done. Verified quality and price.</p>
-    </div>
+    <h3>Transparent Pricing</h3>
+    <p>No hidden fees. Get fair quotes for the work you need done. Verified quality and price.</p>
+</div>
 </div>
 {% endblock %}

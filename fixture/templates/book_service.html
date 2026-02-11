@@ -4,52 +4,59 @@
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-4">
-                    <h2 class="card-title text-center mb-4">Book {{ pro.user.username }}</h2>
-                    <p class="text-muted text-center mb-4">Select a service and time slot to book your home fix.</p>
-
-                    <form method="POST">
-                        {% csrf_token %}
-
-                        <div class="mb-3">
-                            <label for="service" class="form-label fw-bold">Select Service</label>
-                            <select name="service" id="service" class="form-select" required>
-                                <option value="" selected disabled>Choose a service...</option>
-                                {% for s in services %}
-                                <option value="{{ s.id }}" {% if selected_service_id == s.id %}selected{% endif %}>{{
-                                    s.name }} (${{ s.base_price }})</option>
-                                {% endfor %}
-                            </select>
+            <div class="glass-card">
+                <h2 class="text-center mb-4 fw-bold">Book <span class="text-gradient">Professional</span></h2>
+                <div class="d-flex align-items-center mb-4 p-3 rounded bg-white bg-opacity-10">
+                    <div class="me-3">
+                        {% if pro.profile_picture %}
+                        <img src="{{ pro.profile_picture.url }}" class="rounded-circle" width="60" height="60"
+                            style="object-fit: cover;">
+                        {% else %}
+                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white"
+                            style="width: 60px; height: 60px;">
+                            <i class="bi bi-person fs-3"></i>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="booking_date" class="form-label fw-bold">Preferred Date</label>
-                            <input type="date" name="booking_date" id="booking_date" class="form-control" required>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h5 class="m-0 fw-bold">{{ pro.user.full_name|default:pro.user.username }}</h5>
+                        <p class="small text-info m-0">{{ pro.category.name }} Specialist</p>
+                        <div class="text-warning small">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-half"></i>
+                            <span class="text-muted ms-2">(4.5)</span>
                         </div>
-
-                        <div class="mb-4">
-                            <label for="time_slot" class="form-label fw-bold">Time Slot</label>
-                            <select name="time_slot" id="time_slot" class="form-select" required>
-                                <option value="Morning">Morning (8:00 AM - 12:00 PM)</option>
-                                <option value="Afternoon" selected>Afternoon (12:00 PM - 4:00 PM)</option>
-                                <option value="Evening">Evening (4:00 PM - 8:00 PM)</option>
-                            </select>
-                        </div>
-
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">Send Booking Request</button>
-                            <a href="{% url 'home' %}" class="btn btn-outline-secondary">Cancel</a>
-                        </div>
-                    </form>
+                    </div>
                 </div>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="mb-3">
+                        {% if field.field.widget.input_type == 'checkbox' %}
+                        <div class="form-check form-switch mt-4 mb-2">
+                            {{ field }}
+                            <label class="form-check-label ps-2 fw-bold">{{ field.label }}</label>
+                        </div>
+                        {% else %}
+                        <label class="form-label small fw-semibold text-muted">{{ field.label }}</label>
+                        {{ field }}
+                        {% endif %}
+                        {% if field.errors %}
+                        <div class="text-danger small mt-1">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-premium py-3">Proceed to Payment</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-    // Set min date to today
-    document.getElementById('booking_date').min = new Date().toISOString().split('T')[0];
-</script>
 {% endblock %}

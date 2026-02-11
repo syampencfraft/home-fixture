@@ -15,6 +15,8 @@ class User(AbstractUser):
     address = models.TextField(blank=True, null=True)
     is_verified = models.BooleanField(default=False)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='customer')
+    terms_accepted = models.BooleanField(default=False)
+    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if self.is_superuser:
@@ -27,6 +29,8 @@ class UserProfile(models.Model):
     address = models.TextField()
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
+    pincode = models.CharField(max_length=6, blank=True, null=True)
 
     def __str__(self):
         return f"Profile for {self.user.username}"
@@ -47,6 +51,8 @@ class Service(models.Model):
     name = models.CharField(max_length=255)
     base_price = models.DecimalField(max_digits=10, decimal_places=2)
     duration = models.IntegerField(help_text="Estimated duration in minutes")
+    description = models.TextField(blank=True)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.name} ({self.category.name})"
@@ -95,7 +101,9 @@ class Booking(models.Model):
     service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='bookings', null=True)
     booking_date = models.DateTimeField(default=timezone.now)
     time_slot = models.CharField(max_length=100, default='Morning')
+    service_address = models.TextField(blank=True, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
+    requirements = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -127,6 +135,7 @@ class Payment(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     payment_method = models.CharField(max_length=20, choices=METHOD_CHOICES)
     payment_status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='SUCCESS')
+    payment_details = models.TextField(blank=True, null=True)
     paid_at = models.DateTimeField(auto_now_add=True)
 
 class Invoice(models.Model):

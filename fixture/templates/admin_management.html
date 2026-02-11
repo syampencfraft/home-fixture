@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="glass-card">
+            <h2 class="text-center mb-4 fw-bold">Admin <span class="text-gradient">Management</span></h2>
+            <p class="text-center text-muted mb-4">Manage platform users and verification status</p>
+
+            <form method="POST">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="mb-3">
+                    {% if field.field.widget.input_type == 'checkbox' %}
+                    <div class="form-check form-switch">
+                        {{ field }}
+                        <label class="form-check-label ps-2">{{ field.label }}</label>
+                    </div>
+                    {% else %}
+                    <label class="form-label small fw-semibold text-muted">{{ field.label }}</label>
+                    {{ field }}
+                    {% endif %}
+                    {% if field.errors %}
+                    <div class="text-danger small mt-1">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-premium">Apply Action</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,57 +1,87 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container py-5">
-    <h2 class="mb-4">Manage Service Requests</h2>
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <thead class="table-light">
-                <tr>
-                    <th>Customer</th>
-                    <th>Service</th>
-                    <th>Scheduled Date</th>
-                    <th>Time Slot</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for booking in bookings %}
-                <tr>
-                    <td>{{ booking.customer.username }}</td>
-                    <td>{{ booking.service.name }}</td>
-                    <td>{{ booking.booking_date|date:"F j, Y" }}</td>
-                    <td>{{ booking.time_slot }}</td>
-                    <td>
-                        <span
-                            class="badge {% if booking.status == 'PENDING' %}bg-warning text-dark{% elif booking.status == 'CONFIRMED' %}bg-info{% elif booking.status == 'COMPLETED' %}bg-success{% else %}bg-danger{% endif %}">
-                            {{ booking.status }}
-                        </span>
-                    </td>
-                    <td>
-                        {% if booking.status == 'PENDING' %}
+<div class="row align-items-center mb-5">
+    <div class="col-md-6">
+        <h1 class="fw-bold m-0">Service <span class="text-gradient">Requests</span></h1>
+        <p class="text-muted">Manage your job queue and status</p>
+    </div>
+    <div class="col-md-6 text-md-end">
+        <div class="glass-card d-inline-block px-4 py-2">
+            <span class="text-muted small">Profile Status:</span>
+            <span
+                class="badge bg-success bg-opacity-20 text-success border border-success border-opacity-20 ms-2">Active</span>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    {% for booking in bookings %}
+    <div class="col-md-6 col-lg-4">
+        <div class="glass-card h-100 p-4 transition-all hover-translate">
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <div class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-20 px-3 py-1">
+                    Job #{{ booking.id }}
+                </div>
+                <div class="small text-muted"><i class="bi bi-clock me-1"></i> {{ booking.time_slot }}</div>
+            </div>
+
+            <h4 class="fw-bold mb-1">{{ booking.service.name }}</h4>
+            <div class="d-flex align-items-center text-info small mb-4">
+                <i class="bi bi-person me-1"></i> {{ booking.customer.full_name|default:booking.customer.username }}
+            </div>
+
+            <div class="p-3 rounded bg-black bg-opacity-20 mb-4 border border-white border-opacity-5">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="smaller text-muted">Date</span>
+                    <span class="small fw-medium">{{ booking.booking_date|date:"F j, Y" }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="smaller text-muted">Location</span>
+                    <span class="small text-truncate text-end overflow-hidden ms-2" style="max-width: 150px;">{{
+                        booking.service_address }}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span class="smaller text-muted">Status</span>
+                    <span
+                        class="badge {% if booking.status == 'PENDING' %}bg-warning text-dark{% elif booking.status == 'CONFIRMED' %}bg-info{% elif booking.status == 'COMPLETED' %}bg-success{% else %}bg-danger{% endif %} smaller">
+                        {{ booking.status }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2">
+                <a href="{% url 'job_details' booking.id %}" class="btn btn-outline-light rounded-pill btn-sm py-2">View
+                    Full Details</a>
+
+                {% if booking.status == 'PENDING' %}
+                <div class="row g-2">
+                    <div class="col-6">
                         <a href="{% url 'update_booking_status' booking.id 'CONFIRMED' %}"
-                            class="btn btn-sm btn-success">Confirm</a>
+                            class="btn btn-success btn-sm w-100 rounded-pill py-2">Accept</a>
+                    </div>
+                    <div class="col-6">
                         <a href="{% url 'update_booking_status' booking.id 'CANCELLED' %}"
-                            class="btn btn-sm btn-outline-danger">Decline</a>
-                        {% elif booking.status == 'CONFIRMED' %}
-                        <a href="{% url 'update_booking_status' booking.id 'COMPLETED' %}"
-                            class="btn btn-sm btn-primary">Mark Completed</a>
-                        {% else %}
-                        <span class="text-muted small">No actions available</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="4" class="text-center py-4 text-muted">No service requests yet.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                            class="btn btn-outline-danger btn-sm w-100 rounded-pill py-2">Decline</a>
+                    </div>
+                </div>
+                {% elif booking.status == 'CONFIRMED' %}
+                <a href="{% url 'update_job' booking.id %}"
+                    class="btn btn-premium btn-sm w-100 rounded-pill py-2 mb-2">Update Job & Notes</a>
+                <a href="{% url 'update_booking_status' booking.id 'COMPLETED' %}"
+                    class="btn btn-outline-info btn-sm w-100 rounded-pill py-2">Quick Mark Completed</a>
+                {% endif %}
+            </div>
+        </div>
     </div>
-    <div class="mt-4">
-        <a href="{% url 'dashboard' %}" class="btn btn-outline-primary">Back to Dashboard</a>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <div class="glass-card p-5">
+            <i class="bi bi-inbox fs-1 text-muted mb-3 d-block"></i>
+            <h3>No Active Requests</h3>
+            <p class="text-muted">New service requests will appear here.</p>
+        </div>
     </div>
+    {% endfor %}
 </div>
 {% endblock %}

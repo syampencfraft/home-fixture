@@ -42,3 +42,18 @@ class BookingTest(TestCase):
         url = reverse('home')
         response = self.client.get(url)
         self.assertContains(response, "pro")
+
+    def test_track_job_view(self):
+        # Create a booking first
+        booking = Booking.objects.create(
+            customer=self.customer,
+            professional=self.pro_profile,
+            service=self.service,
+            booking_date="2026-05-01",
+            time_slot="Morning"
+        )
+        url = reverse('track_job', kwargs={'booking_id': booking.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Tracking") # Assuming tracking.html has 'Tracking' or similar content
+

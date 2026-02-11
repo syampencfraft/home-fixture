@@ -3,8 +3,14 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import RegistrationForm, ServiceProfessionalProfileForm
-from .models import Category, ServiceProfessional, Booking, Service
+from .forms import (
+    RegistrationForm, ServiceProfessionalProfileForm, LoginForm, 
+    CustomerProfileForm, ServiceListingForm, ServiceSearchForm, 
+    BookingForm, PaymentForm, ReviewForm, AdminManagementForm,
+    JobUpdateForm
+)
+from .models import Category, ServiceProfessional, Booking, Service, JobTracking, UserProfile, Payment, Review
+
 from django.shortcuts import get_object_or_404
 
 
@@ -42,7 +48,7 @@ def service_professionals(request, service_id):
 
 def register_view(request):
     if request.method == 'POST':
-        form = RegistrationForm(request.POST)
+        form = RegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             messages.success(request, "Registration successful! Please login to continue.")
@@ -53,7 +59,7 @@ def register_view(request):
 
 def login_view(request):
     if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
+        form = LoginForm(request, data=request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
@@ -70,7 +76,7 @@ def login_view(request):
         else:
             messages.error(request, "Invalid username or password.")
     
-    form = AuthenticationForm()
+    form = LoginForm()
     return render(request, 'login.html', {'form': form})
 
 def logout_view(request):
@@ -88,22 +94,48 @@ def dashboard(request):
 
 
 @login_required
+def update_customer_profile(request):
+    if not request.user.is_customer:
+        messages.error(request, "Only customers can access this page.")
+        return redirect('home')
+
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        form = CustomerProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            # Save User fields
+            if form.cleaned_data.get('profile_picture'):
+                request.user.profile_picture = form.cleaned_data['profile_picture']
+                request.user.save()
+            form.save()
+            messages.success(request, "Your profile has been updated!")
+            return redirect('profile_view')
+    else:
+        form = CustomerProfileForm(instance=profile, initial={'profile_picture': request.user.profile_picture})
+
+    return render(request, 'update_customer_profile.html', {'form': form, 'profile': profile})
+
+@login_required
 def update_professional_profile(request):
     if not request.user.is_professional:
         messages.error(request, "Only service professionals can access this page.")
         return redirect('home')
 
-    # Get the profile or create a new empty one if it doesn't exist
     profile, created = ServiceProfessional.objects.get_or_create(user=request.user)
 
     if request.method == 'POST':
         form = ServiceProfessionalProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
+            # Save User fields
+            if form.cleaned_data.get('profile_picture'):
+                request.user.profile_picture = form.cleaned_data['profile_picture']
+                request.user.save()
             form.save()
             messages.success(request, "Your professional profile has been updated!")
-            return redirect('home')
+            return redirect('profile_view')
     else:
-        form = ServiceProfessionalProfileForm(instance=profile)
+        form = ServiceProfessionalProfileForm(instance=profile, initial={'profile_picture': request.user.profile_picture})
 
     return render(request, 'update_profile.html', {'form': form, 'profile': profile})
 
@@ -114,70 +146,29 @@ def book_professional(request, pro_id):
         return redirect('home')
 
     professional = get_object_or_404(ServiceProfessional, id=pro_id)
-    services = Service.objects.filter(category=professional.category)
-
-    selected_service_id = request.GET.get('service')
-    if selected_service_id:
-        try:
-            selected_service_id = int(selected_service_id)
-        except ValueError:
-            selected_service_id = None
-
+    
     if request.method == 'POST':
-        service_id = request.POST.get('service')
-        time_slot = request.POST.get('time_slot')
-        booking_date_str = request.POST.get('booking_date')
-
-        if not all([service_id, time_slot, booking_date_str]):
-            messages.error(request, "Please fill all required fields.")
-            return render(request, 'book_service.html', {
-                'pro': professional,
-                'services': services,
-                'selected_service_id': selected_service_id
-            })
-
-        service = get_object_or_404(Service, id=service_id)
-
-        from datetime import datetime
-        try:
-            booking_date = datetime.strptime(
-                booking_date_str, '%Y-%m-%d'
-            ).date()
-        except ValueError:
-            messages.error(request, "Invalid date format.")
-            return redirect('book_professional', pro_id=pro_id)
-
-        # Prevent duplicate pending bookings
-        if Booking.objects.filter(
-            customer=request.user,
-            professional=professional,
-            service=service,
-            status='PENDING'
-        ).exists():
-            messages.warning(
-                request,
-                "You already have a pending booking for this service."
-            )
+        form = BookingForm(request.POST)
+        if form.is_valid():
+            booking = form.save(commit=False)
+            booking.customer = request.user
+            booking.professional = professional
+            booking.save()
+            messages.success(request, f"Booking request for {booking.service.name} sent!")
             return redirect('customer_bookings')
-
-        Booking.objects.create(
-            customer=request.user,
-            professional=professional,
-            service=service,
-            booking_date=booking_date,
-            time_slot=time_slot
-        )
-
-        messages.success(
-            request,
-            f"Booking request for {service.name} sent!"
-        )
-        return redirect('customer_bookings')
+    else:
+        selected_service_id = request.GET.get('service')
+        initial_data = {}
+        if selected_service_id:
+            initial_data['service'] = selected_service_id
+        
+        form = BookingForm(initial=initial_data)
+        # Filter services to only those offered by the professional's category
+        form.fields['service'].queryset = Service.objects.filter(category=professional.category)
 
     return render(request, 'book_service.html', {
         'pro': professional,
-        'services': services,
-        'selected_service_id': selected_service_id
+        'form': form
     })
 
 @login_required
@@ -268,20 +259,22 @@ def submit_review(request, booking_id):
         messages.error(request, "You can only review completed services you booked.")
         return redirect('customer_bookings')
     
-    from .models import Review
     if Review.objects.filter(booking=booking).exists():
         messages.warning(request, "You have already reviewed this service.")
         return redirect('customer_bookings')
 
     if request.method == 'POST':
-        rating = request.POST.get('rating')
-        comment = request.POST.get('comment')
-        if rating and comment:
-            Review.objects.create(booking=booking, rating=rating, comment=comment)
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.booking = booking
+            review.save()
             messages.success(request, "Thank you for your feedback!")
             return redirect('customer_bookings')
+    else:
+        form = ReviewForm()
             
-    return render(request, 'submit_review.html', {'booking': booking})
+    return render(request, 'submit_review.html', {'booking': booking, 'form': form})
 
 @login_required
 def submit_complaint(request, booking_id):
@@ -311,9 +304,147 @@ def track_job(request, booking_id):
     if request.user != booking.customer and request.user != booking.professional.user:
         return redirect('home')
     
-    # Mock tracking status
+    # Mock tracking status or get existing
     tracking, created = JobTracking.objects.get_or_create(
         booking=booking,
-        defaults={'latitude': 0, 'longitude': 0, 'status': 'ON_THE_WAY'}
+        defaults={'latitude': 12.9716, 'longitude': 77.5946, 'status': 'ON_THE_WAY'}
     )
-    return render(request, 'tracking.html', {'booking': booking, 'tracking': tracking})
+    
+    # Timeline steps based on status
+    steps = [
+        {'id': 'PENDING', 'label': 'Booking Received', 'completed': True},
+        {'id': 'CONFIRMED', 'label': 'Pro Confirmed', 'completed': booking.status in ['CONFIRMED', 'COMPLETED']},
+        {'id': 'ON_THE_WAY', 'label': 'On the Way', 'completed': tracking.status in ['ON_THE_WAY', 'ARRIVED'] or booking.status == 'COMPLETED'},
+        {'id': 'ARRIVED', 'label': 'Work in Progress', 'completed': tracking.status == 'ARRIVED' or booking.status == 'COMPLETED'},
+        {'id': 'COMPLETED', 'label': 'Service Finished', 'completed': booking.status == 'COMPLETED'},
+    ]
+
+    return render(request, 'tracking.html', {
+        'booking': booking, 
+        'tracking': tracking,
+        'steps': steps
+    })
+
+@login_required
+def job_details(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    if request.user != booking.customer and request.user != booking.professional.user:
+        return redirect('home')
+    
+    payment = getattr(booking, 'payment', None)
+    review = getattr(booking, 'review', None)
+    
+    return render(request, 'job_details.html', {
+        'booking': booking,
+        'payment': payment,
+        'review': review
+    })
+
+@login_required
+def search_services(request):
+    form = ServiceSearchForm(request.GET or None)
+    services = Service.objects.all()
+    if form.is_valid():
+        if form.cleaned_data.get('category'):
+            services = services.filter(category=form.cleaned_data['category'])
+        if form.cleaned_data.get('price_range'):
+            services = services.filter(base_price__lte=form.cleaned_data['price_range'])
+        # Location and Rating filtering would require geolocation or complex queries
+        
+    return render(request, 'search_results.html', {'form': form, 'services': services})
+
+@login_required
+def list_service(request):
+    if not request.user.is_professional:
+        return redirect('home')
+    
+    if request.method == 'POST':
+        form = ServiceListingForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Service listed successfully!")
+            return redirect('dashboard')
+    else:
+        form = ServiceListingForm()
+    
+    return render(request, 'list_service.html', {'form': form})
+
+@login_required
+def process_payment(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    if request.user != booking.customer:
+        return redirect('home')
+    
+    payment, created = Payment.objects.get_or_create(
+        booking=booking,
+        defaults={'amount': booking.service.base_price if booking.service else 0}
+    )
+    
+    if request.method == 'POST':
+        form = PaymentForm(request.POST, instance=payment)
+        if form.is_valid():
+            payment = form.save()
+            payment.payment_status = 'SUCCESS'
+            payment.save()
+            messages.success(request, "Payment successful!")
+            return redirect('customer_bookings')
+    else:
+        form = PaymentForm(instance=payment)
+    
+    return render(request, 'payment.html', {'form': form, 'booking': booking})
+
+@login_required
+def admin_management(request):
+    if not request.user.is_staff:
+        return redirect('home')
+    
+    if request.method == 'POST':
+        form = AdminManagementForm(request.POST)
+        if form.is_valid():
+            # Logic for admin actions
+            messages.success(request, "Admin action processed.")
+            return redirect('admin_management')
+    else:
+        form = AdminManagementForm()
+    
+    return render(request, 'admin_management.html', {'form': form})
+@login_required
+def update_job(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    if not request.user.is_professional or booking.professional.user != request.user:
+        messages.error(request, "Access denied.")
+        return redirect('home')
+    
+    if request.method == 'POST':
+        form = JobUpdateForm(request.POST, instance=booking)
+        if form.is_valid():
+            booking = form.save()
+            # If status changed to completed, ensure invoice exists
+            if booking.status == 'COMPLETED':
+                from .models import Invoice
+                import uuid
+                Invoice.objects.get_or_create(
+                    booking=booking,
+                    defaults={
+                        'invoice_number': str(uuid.uuid4())[:8].upper(),
+                        'total_amount': booking.service.base_price if booking.service else 0
+                    }
+                )
+            
+            # Update tracking status if applicable
+            tracking = getattr(booking, 'tracking', None)
+            if tracking:
+                if booking.status == 'COMPLETED':
+                    tracking.status = 'ARRIVED' # Or add a 'FINISHED' status if models allow
+                    tracking.save()
+
+            messages.success(request, "Job updated successfully.")
+            return redirect('professional_bookings')
+    else:
+        form = JobUpdateForm(instance=booking)
+    
+    return render(request, 'update_job.html', {'form': form, 'booking': booking})
+
+@login_required
+def profile_view(request):
+    return render(request, 'profile.html')

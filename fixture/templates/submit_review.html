@@ -1,48 +1,75 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-4">
-                    <h2 class="card-title text-center mb-4">Rate Your Experience</h2>
-                    <p class="text-muted text-center mb-4">How was your service with <b>{{
-                            booking.professional.user.username }}</b> for <b>{{ booking.service.name }}</b>?</p>
-
-                    <form method="POST">
-                        {% csrf_token %}
-                        <div class="mb-3 text-center">
-                            <label class="form-label d-block fw-bold mb-3">Rating</label>
-                            <div class="btn-group w-100" role="group">
-                                <input type="radio" class="btn-check" name="rating" id="r1" value="1" required>
-                                <label class="btn btn-outline-warning" for="r1">1 ★</label>
-                                <input type="radio" class="btn-check" name="rating" id="r2" value="2">
-                                <label class="btn btn-outline-warning" for="r2">2 ★</label>
-                                <input type="radio" class="btn-check" name="rating" id="r3" value="3">
-                                <label class="btn btn-outline-warning" for="r3">3 ★</label>
-                                <input type="radio" class="btn-check" name="rating" id="r4" value="4">
-                                <label class="btn btn-outline-warning" for="r4">4 ★</label>
-                                <input type="radio" class="btn-check" name="rating" id="r5" value="5" checked>
-                                <label class="btn btn-outline-warning" for="r5">5 ★</label>
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="comment" class="form-label fw-bold">Your Feedback</label>
-                            <textarea name="comment" id="comment" class="form-control" rows="4"
-                                placeholder="What did you like or what could be improved?" required></textarea>
-                        </div>
-
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-success btn-lg">Submit Review</button>
-                            <a href="{% url 'customer_bookings' %}" class="btn btn-outline-secondary">Back to
-                                Bookings</a>
-                        </div>
-                    </form>
-                </div>
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="glass-card p-5 text-center">
+            <div
+                class="bg-warning bg-opacity-10 p-4 rounded-circle d-inline-block mb-4 border border-warning border-opacity-10">
+                <i class="bi bi-stars text-warning fs-1"></i>
             </div>
+
+            <h2 class="fw-bold mb-2">Service <span class="text-gradient">Feedback</span></h2>
+            <p class="text-muted mb-5">How was your experience with {{ booking.professional.user.username }}?</p>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="mb-5">
+                    <label class="form-label small fw-bold text-muted text-uppercase mb-4 d-block">Overall
+                        Rating</label>
+                    <div class="rating-stars h2">
+                        {% for i in "54321" %}
+                        <input type="radio" name="rating" value="{{ i }}" id="rate-{{ i }}" class="d-none" {% if i=="5"
+                            %}checked{% endif %}>
+                        <label for="rate-{{ i }}" class="bi bi-star-fill px-2 cursor-pointer transition-all"></label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="mb-4 text-start">
+                    <label class="form-label small fw-semibold text-muted">Detailed Comment</label>
+                    <textarea name="comment"
+                        class="form-control rounded-4 bg-white bg-opacity-5 border-white border-opacity-10 text-white p-3"
+                        rows="4" placeholder="Tell us what you liked (or didn't like)..."></textarea>
+                    {% if form.comment.errors %}
+                    <div class="text-danger small mt-1">{{ form.comment.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="d-grid gap-3 pt-3">
+                    <button type="submit" class="btn btn-premium py-3 rounded-pill fw-bold">
+                        Submit Review
+                    </button>
+                    <a href="{% url 'job_details' booking.id %}" class="btn btn-link text-muted">Skip for now</a>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+<style>
+    .rating-stars {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: center;
+    }
+
+    .rating-stars label {
+        color: rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .rating-stars input:checked~label,
+    .rating-stars label:hover,
+    .rating-stars label:hover~label {
+        color: #fbbf24;
+        transform: scale(1.15);
+    }
+
+    .cursor-pointer {
+        cursor: pointer;
+    }
+</style>
 {% endblock %}

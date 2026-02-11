@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="glass-card p-5">
+            <h2 class="fw-bold mb-4">Update <span class="text-gradient">Job #{{ booking.id }}</span></h2>
+            <p class="text-muted mb-5">Update status and add specific requirements or notes for the customer.</p>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="mb-4">
+                    <label class="form-label small fw-bold text-muted">Current Status</label>
+                    {{ form.status }}
+                </div>
+
+                <div class="mb-5">
+                    <label class="form-label small fw-bold text-muted">Job Requirements / Notes</label>
+                    {{ form.requirements }}
+                    <div class="form-text smaller text-muted mt-2">These notes will be visible to the customer on their
+                        tracking and job details page.</div>
+                </div>
+
+                <div class="d-grid gap-3 pt-3">
+                    <button type="submit" class="btn btn-premium py-3 rounded-pill fw-bold">
+                        Save Changes
+                    </button>
+                    <a href="{% url 'professional_bookings' %}" class="btn btn-link text-muted">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
