@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="fw-bold">Professional Dashboard</h1>
+            <p class="lead text-muted">Manage your profile and view your performance.</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Profile Overview Card -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-primary mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                            class="bi bi-person-circle me-2" viewBox="0 0 16 16">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                            <path fill-rule="evenodd"
+                                d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+                        </svg>
+                        Your Profile
+                    </h5>
+                    {% if user.pro_profile %}
+                    <p><strong>Category:</strong> {{ user.pro_profile.category.name|default:"Not Set" }}</p>
+                    <p><strong>Experience:</strong> {{ user.pro_profile.experience_years }} years</p>
+                    <p><strong>Status:</strong>
+                        {% if user.pro_profile.is_verified %}
+                        <span class="badge bg-success">Verified</span>
+                        {% else %}
+                        <span class="badge bg-warning text-dark">Pending Verification</span>
+                        {% endif %}
+                    </p>
+                    {% else %}
+                    <div class="alert alert-warning">
+                        <small>You haven't set up your professional details yet.</small>
+                    </div>
+                    {% endif %}
+                    <a href="{% url 'update_profile' %}" class="btn btn-outline-primary w-100 mt-3">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Safety Score Card -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-success mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                            class="bi bi-shield-check me-2" viewBox="0 0 16 16">
+                            <path
+                                d="M5.338 4.226a.25.25 0 0 1 .15.062l.307.275 6.856-8.57 1.057.817L6.643 6.175a.502.502 0 0 1-.726-.034l-2.029-2.227 1.45-1.688z" />
+                            <path
+                                d="M11.5 5.5v1.61c0 2.541-1.466 4.793-3.782 5.811l-.718.332-.718-.332C4.466 11.903 3 9.65 3 7.11V5.5h8.5zM6.5 2h8a.5.5 0 0 1 .5.5V5h-9V2.5a.5.5 0 0 1 .5-.5z" />
+                        </svg>
+                        Safety Score
+                    </h5>
+                    {% if user.pro_profile %}
+                    <h2 class="display-4 fw-bold text-center my-3">{{ user.pro_profile.safety_score }}</h2>
+                    <p class="text-center text-muted small">Higher scores improve your visibility.</p>
+                    {% else %}
+                    <p class="text-muted">Complete your profile to see your score.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,93 @@
+﻿{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="col-md-5" data-aos="zoom-in">
+        <div class="glass-card shadow-lg p-5">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold display-6 mb-2">Welcome <span class="text-gradient">Back</span></h2>
+                <p class="text-muted">Login to manage your home service appointments</p>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                {% for field in form %}
+                <div class="mb-4">
+                    <label class="form-label small fw-bold text-white mb-2">{{ field.label }}</label>
+                    <div class="position-relative">
+                        {{ field }}
+                    </div>
+                    {% for error in field.errors %}
+                    <div class="text-danger smaller mt-1 animate-fade-in"><i class="bi bi-exclamation-circle me-1"></i>
+                        {{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+
+                {% if messages %}
+                <div class="mb-4">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} py-2 px-3 small d-flex align-items-center gap-2">
+                        <i class="bi bi-info-circle"></i> {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="d-grid gap-3 mt-5">
+                    <button type="submit" class="btn btn-premium py-3 rounded-pill fw-bold shadow-sm">
+                        Sign In <i class="bi bi-arrow-right-short ms-1"></i>
+                    </button>
+                    <div class="text-center mt-3">
+                        <p class="small text-muted mb-0">Don't have an account? <a href="{% url 'register' %}"
+                                class="text-info text-decoration-underline fw-bold">Join HomeFixr</a></p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Styling for Django-rendered inputs to look consistent with our theme */
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    textarea,
+    select {
+        display: block;
+        width: 100%;
+        padding: 0.8rem 1.2rem;
+        font-size: 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        color: white !important;
+        transition: all 0.3s ease;
+    }
+
+    input:focus {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: #a855f7;
+        box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.2);
+        outline: none;
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.4s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-5px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+{% endblock %}

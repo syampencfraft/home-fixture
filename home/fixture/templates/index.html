@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-center">
+    <div class="hero-blob" style="top: -10%; left: -10%;"></div>
+    <div class="hero-blob" style="bottom: -10%; right: -10%;"></div>
+
+    <div class="container" data-aos="fade-up">
+        <h1 class="display-3 fw-bold mb-4">Your Home, <span class="text-gradient">Fixed & Fixtured</span></h1>
+        <p class="lead text-muted mb-5 mx-auto" style="max-width: 700px;">
+            Experience premium home services with verified professionals. From minor repairs to major renovations, we
+            bring quality and trust to your doorstep.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'register' %}" class="btn btn-premium px-5 py-3 rounded-pill shadow">Get Started Now</a>
+            <a href="#how-it-works" class="btn btn-outline-light px-5 py-3 rounded-pill">Learn More</a>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4 justify-content-center">
+            <!-- Feature 1: Verified Pros -->
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="glass-card h-100 hover-lift text-center p-5">
+                    <div
+                        class="feature-icon bg-primary bg-gradient text-white rounded-4 p-3 mb-4 d-inline-block shadow-sm">
+                        <i class="bi bi-shield-check fs-2"></i>
+                    </div>
+                    <h3 class="h4 fw-bold mb-3">Verified Pros</h3>
+                    <p class="text-muted">Every professional on our platform is vetted for safety and quality. Check
+                        reviews and ratings before you hire.</p>
+                </div>
+            </div>
+
+            <!-- Feature 2: Quick Service -->
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="glass-card h-100 hover-lift text-center p-5">
+                    <div
+                        class="feature-icon bg-info bg-gradient text-white rounded-4 p-3 mb-4 d-inline-block shadow-sm">
+                        <i class="bi bi-lightning-charge fs-2"></i>
+                    </div>
+                    <h3 class="h4 fw-bold mb-3">Quick Service</h3>
+                    <p class="text-muted">Book appointments that fit your schedule. Our pros are helping homeowners like
+                        you every day with lightning speed.</p>
+                </div>
+            </div>
+
+            <!-- Feature 3: Transparent Pricing -->
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="glass-card h-100 hover-lift text-center p-5">
+                    <div
+                        class="feature-icon bg-success bg-gradient text-white rounded-4 p-3 mb-4 d-inline-block shadow-sm">
+                        <i class="bi bi-tag fs-2"></i>
+                    </div>
+                    <h3 class="h4 fw-bold mb-3">Transparent Pricing</h3>
+                    <p class="text-muted">No hidden fees. Get fair quotes for the work you need done. We ensure verified
+                        quality at a fair market price.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How it Works Section -->
+<section id="how-it-works" class="py-5 my-5">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-down">
+            <h2 class="display-5 fw-bold mb-3">How It <span class="text-gradient">Works</span></h2>
+            <p class="text-muted">Simple steps to get your home tasks handled professionally.</p>
+        </div>
+
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="glass-card p-4 border-0">
+                    <div class="d-flex align-items-start gap-4 mb-4">
+                        <div class="step-number">1</div>
+                        <div>
+                            <h4 class="fw-bold">Search & Discover</h4>
+                            <p class="text-muted">Find experts in plumbing, electrical, cleaning, and more. Compare
+                                profiles and ratings easily.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start gap-4 mb-4">
+                        <div class="step-number">2</div>
+                        <div>
+                            <h4 class="fw-bold">Book Instantly</h4>
+                            <p class="text-muted">Select a professional, choose your preferred time slot, and confirm
+                                your booking in seconds.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start gap-4">
+                        <div class="step-number">3</div>
+                        <div>
+                            <h4 class="fw-bold">Relax & Enjoy</h4>
+                            <p class="text-muted">Our professional arrives, handles the job, and you pay securely
+                                through the platform.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="position-relative">
+                    <div class="glass-card p-2 shadow-lg" style="border-radius: 30px; overflow: hidden;">
+                        <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6954?auto=format&fit=crop&q=80&w=1200"
+                            class="img-fluid" style="border-radius: 20px;" alt="Work in progress">
+                    </div>
+                    <div class="position-absolute glass-card p-3 shadow-sm d-none d-md-block"
+                        style="bottom: -20px; left: -20px; border-radius: 15px;">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-success rounded-circle p-2"><i class="bi bi-check2 text-white"></i></div>
+                            <div>
+                                <small class="text-muted d-block">Booking Confirmed</small>
+                                <span class="fw-bold">Service in Progress</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 mb-5" data-aos="zoom-in">
+    <div class="container">
+        <div class="glass-card p-5 text-center bg-gradient" style="background: var(--primary-gradient);">
+            <h2 class="display-6 fw-bold mb-4 text-white">Ready to fix your home?</h2>
+            <p class="lead mb-5 text-white-50">Join thousands of homeowners who trust HomeFixr for their daily needs.
+            </p>
+            <a href="{% url 'register' %}" class="btn btn-light btn-lg px-5 py-3 rounded-pill fw-bold"
+                style="color: #6366f1;">Join Now</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

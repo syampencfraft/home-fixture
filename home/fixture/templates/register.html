@@ -1,0 +1,272 @@
+﻿{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="col-md-8 col-lg-7" data-aos="zoom-in">
+        <div class="glass-card shadow-lg p-5">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold display-6 mb-2">Join <span class="text-gradient">HomeFixr</span></h2>
+                <p class="text-muted">Connect with trusted professionals and homeowners today</p>
+            </div>
+
+            <form method="POST" novalidate enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Account Information Section -->
+                <div class="mb-5">
+                    <h5 class="fw-bold text-white mb-3 pb-2 border-bottom border-white border-opacity-10">
+                        <i class="bi bi-person-circle me-2 text-info"></i> Account Information
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label small fw-bold text-white mb-2">{{ form.username.label }}</label>
+                            {{ form.username }}
+                            {% for error in form.username.errors %}
+                            <div class="text-danger smaller mt-1 animate-fade-in"><i
+                                    class="bi bi-exclamation-circle me-1"></i> {{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label small fw-bold text-white mb-2">{{ form.full_name.label }}</label>
+                            {{ form.full_name }}
+                            {% if form.full_name.help_text %}
+                            <div class="form-text smaller text-info fw-bold mt-1"><i class="bi bi-info-circle me-1"></i>
+                                {{ form.full_name.help_text }}</div>
+                            {% endif %}
+                            {% for error in form.full_name.errors %}
+                            <div class="text-danger smaller mt-1 animate-fade-in"><i
+                                    class="bi bi-exclamation-circle me-1"></i> {{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label small fw-bold text-white mb-2">{{ form.password1.label }}</label>
+                            {{ form.password1 }}
+                            {% for error in form.password1.errors %}
+                            <div class="text-danger smaller mt-1 animate-fade-in"><i
+                                    class="bi bi-exclamation-circle me-1"></i> {{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label small fw-bold text-white mb-2">{{ form.password2.label }}</label>
+                            {{ form.password2 }}
+                            {% for error in form.password2.errors %}
+                            <div class="text-danger smaller mt-1 animate-fade-in"><i
+                                    class="bi bi-exclamation-circle me-1"></i> {{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information Section -->
+                <div class="mb-5">
+                    <h5 class="fw-bold text-white mb-3 pb-2 border-bottom border-white border-opacity-10">
+                        <i class="bi bi-envelope me-2 text-info"></i> Contact Information
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label small fw-bold text-white mb-2">{{ form.email.label }}</label>
+                            {{ form.email }}
+                            {% for error in form.email.errors %}
+                            <div class="text-danger smaller mt-1 animate-fade-in"><i
+                                    class="bi bi-exclamation-circle me-1"></i> {{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label small fw-bold text-white mb-2">{{ form.phone_number.label
+                                }}</label>
+                            {{ form.phone_number }}
+                            {% for error in form.phone_number.errors %}
+                            <div class="text-danger smaller mt-1 animate-fade-in"><i
+                                    class="bi bi-exclamation-circle me-1"></i> {{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Role & Profile Section -->
+                <div class="mb-5">
+                    <h5 class="fw-bold text-white mb-3 pb-2 border-bottom border-white border-opacity-10">
+                        <i class="bi bi-briefcase me-2 text-info"></i> Role & Profile
+                    </h5>
+
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-white mb-3">{{ form.role.label }}</label>
+                        <div class="row g-3">
+                            {% for radio in form.role %}
+                            <div class="col-6">
+                                <div class="role-option">
+                                    {{ radio.tag }}
+                                    <label for="{{ radio.id_for_label }}" class="role-label">
+                                        {% if radio.choice_label == 'Customer' %}
+                                        <i class="bi bi-person role-icon"></i>
+                                        {% else %}
+                                        <i class="bi bi-tools role-icon"></i>
+                                        {% endif %}
+                                        {{ radio.choice_label }}
+                                    </label>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% for error in form.role.errors %}
+                        <div class="text-danger smaller mt-1 animate-fade-in">
+                            <i class="bi bi-exclamation-circle me-1"></i> {{ error }}
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-white mb-2">{{ form.profile_picture.label }}</label>
+                        {{ form.profile_picture }}
+                        {% for error in form.profile_picture.errors %}
+                        <div class="text-danger smaller mt-1 animate-fade-in">
+                            <i class="bi bi-exclamation-circle me-1"></i> {{ error }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Terms & Conditions -->
+                <div class="mb-4">
+                    <div
+                        class="form-check d-flex align-items-center gap-2 p-3 rounded bg-white bg-opacity-5 border border-white border-opacity-10">
+                        {{ form.terms_accepted }}
+                        <label class="form-check-label text-white fw-medium pt-1"
+                            for="{{ form.terms_accepted.id_for_label }}">
+                            I agree to the <a href="#" class="text-info text-decoration-underline">Terms &
+                                Conditions</a>
+                        </label>
+                    </div>
+                    {% for error in form.terms_accepted.errors %}
+                    <div class="text-danger smaller mt-2 animate-fade-in"><i class="bi bi-exclamation-circle me-1"></i>
+                        {{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Non-field errors -->
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger mb-4">
+                    {% for error in form.non_field_errors %}
+                    <div><i class="bi bi-exclamation-triangle me-1"></i> {{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="d-grid gap-3 mt-4">
+                    <button type="submit" class="btn btn-premium py-3 rounded-pill fw-bold shadow-sm">
+                        Create Account <i class="bi bi-person-plus ms-1"></i>
+                    </button>
+                    <div class="text-center mt-3">
+                        <p class="small text-muted mb-0">Already have an account? <a href="{% url 'login' %}"
+                                class="text-info text-decoration-underline fw-bold">Login here</a></p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Styling for Django-rendered inputs to look consistent with our theme */
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="file"],
+    textarea,
+    select {
+        display: block;
+        width: 100%;
+        padding: 0.8rem 1.2rem;
+        font-size: 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        color: white !important;
+        transition: all 0.3s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: #a855f7;
+        box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.2);
+        outline: none;
+    }
+
+    /* Custom Role Selection Styling */
+    .role-option {
+        position: relative;
+        width: 100%;
+    }
+
+    .role-input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    .role-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: #cbd5e1;
+        font-weight: 500;
+        width: 100%;
+        text-align: center;
+    }
+
+    .role-label:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(168, 85, 247, 0.4);
+    }
+
+    .role-input:checked+.role-label {
+        background: var(--primary-gradient);
+        border-color: #a855f7;
+        color: white;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+    }
+
+    .role-icon {
+        font-size: 1.2rem;
+        margin-right: 0.5rem;
+    }
+
+    /* Checkbox styling */
+    input[type="checkbox"] {
+        width: 1.25rem;
+        height: 1.25rem;
+        cursor: pointer;
+        accent-color: #a855f7;
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.4s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-5px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+{% endblock %}

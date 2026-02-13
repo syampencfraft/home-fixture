@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Upload Document</h4>
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Document Type</label>
+                            <select name="document_type" class="form-select" required>
+                                <option value="ID">Identity Document (Aadhar/PAN)</option>
+                                <option value="LICENSE">Trade License</option>
+                                <option value="CERTIFICATE">Skill Certificate</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Select File</label>
+                            <input type="file" name="document_file" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Upload for Verification</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Uploaded Documents</h4>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Uploaded At</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for doc in docs %}
+                                <tr>
+                                    <td>{{ doc.get_document_type_display }}</td>
+                                    <td>
+                                        <span
+                                            class="badge {% if doc.verification_status == 'APPROVED' %}bg-success{% elif doc.verification_status == 'REJECTED' %}bg-danger{% else %}bg-warning text-dark{% endif %}">
+                                            {{ doc.verification_status }}
+                                        </span>
+                                    </td>
+                                    <td>{{ doc.uploaded_at|date:"M d, Y" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center py-4 text-muted">No documents uploaded yet.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

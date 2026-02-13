@@ -1,0 +1,160 @@
+﻿{% extends 'base.html' %}
+
+{% block content %}
+<!-- Welcome Section -->
+<div class="row mb-5 align-items-center" data-aos="fade-down">
+    <div class="col-lg-8">
+        <div class="d-flex align-items-center gap-4">
+            <div class="profile-pic-wrapper position-relative">
+                {% if user.profile_picture %}
+                <img src="{{ user.profile_picture.url }}"
+                    class="rounded-circle shadow-lg border border-3 border-white border-opacity-10" width="80"
+                    height="80" style="object-fit: cover;">
+                {% else %}
+                <div class="rounded-circle bg-gradient d-flex align-items-center justify-content-center text-white shadow-lg"
+                    style="width: 80px; height: 80px; border: 3px solid rgba(255,255,255,0.1);">
+                    <i class="bi bi-person-fill fs-1"></i>
+                </div>
+                {% endif %}
+                <div class="status-indicator position-absolute bottom-0 end-0 bg-success border border-2 border-dark rounded-circle"
+                    style="width: 18px; height: 18px;" title="Online"></div>
+            </div>
+            <div>
+                <h1 class="fw-bold display-5 mb-1">Welcome back, <span class="text-gradient">{{ user.username }}</span>
+                </h1>
+                <p class="text-muted fs-5 mb-0">Find and book verified professionals for your home needs today.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 text-lg-end d-none d-lg-block">
+        <div class="glass-card d-inline-block p-3">
+            <div class="d-flex align-items-center gap-3 text-start">
+                <div class="bg-primary rounded-circle p-2"><i class="bi bi-calendar-check text-white"></i></div>
+                <div>
+                    <div class="small text-muted">Active Bookings</div>
+                    <div class="fw-bold fs-5">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Categories Section -->
+<div class="mb-5">
+    <div class="d-flex justify-content-between align-items-end mb-4" data-aos="fade-right">
+        <div>
+            <h3 class="fw-bold m-0">Service <span class="text-gradient">Categories</span></h3>
+            <p class="text-muted small mb-0">Explore our wide range of professional services</p>
+        </div>
+    </div>
+    <div class="row g-4">
+        {% for cat in categories %}
+        <div class="col-6 col-md-3" data-aos="zoom-in" data-aos-delay="{{ forloop.counter|add:'100' }}">
+            <a href="{% url 'category_professionals' cat.id %}" class="text-decoration-none">
+                <div class="glass-card text-center p-4 hover-lift h-100 border-0 shadow-sm"
+                    style="background: rgba(255,255,255,0.03);">
+                    <div class="category-icon-wrapper mb-3 mx-auto shadow-sm">
+                        {% if cat.icon %}
+                        <img src="{{ cat.icon.url }}" width="40" height="40">
+                        {% else %}
+                        <i class="bi bi-tools fs-2 text-info"></i>
+                        {% endif %}
+                    </div>
+                    <h5 class="fw-bold text-light mb-0 small">{{ cat.name }}</h5>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Featured Professionals Section -->
+<div class="mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4" data-aos="fade-left">
+        <div>
+            <h3 class="fw-bold m-0">Top <span class="text-gradient">Professionals</span></h3>
+            <p class="text-muted small mb-0">Verified experts with the highest safety scores</p>
+        </div>
+        <a href="{% url 'search_services' %}" class="btn btn-sm btn-outline-light rounded-pill px-3">
+            View all <i class="bi bi-arrow-right ms-1"></i>
+        </a>
+    </div>
+    <div class="row g-4">
+        {% for pro in top_pros %}
+        <div class="col-md-3" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:'200' }}">
+            <div class="glass-card h-100 p-4 hover-lift position-relative overflow-hidden">
+                <!-- Decorative background element -->
+                <div class="position-absolute"
+                    style="top: -20px; right: -20px; width: 60px; height: 60px; background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 70%); z-index: 0;">
+                </div>
+
+                <div class="text-center mb-3 position-relative" style="z-index: 1;">
+                    {% if pro.profile_picture %}
+                    <div class="mb-3 d-inline-block">
+                        <img src="{{ pro.profile_picture.url }}" class="rounded-circle shadow" width="80" height="80"
+                            style="object-fit: cover; border: 3px solid rgba(168, 85, 247, 0.3);">
+                    </div>
+                    {% else %}
+                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white mx-auto mb-3 shadow"
+                        style="width: 80px; height: 80px; border: 3px solid rgba(255,255,255,0.1);">
+                        <i class="bi bi-person fs-1"></i>
+                    </div>
+                    {% endif %}
+                    <h5 class="fw-bold mb-1">{{ pro.user.full_name|default:pro.user.username }}</h5>
+                    <div class="badge bg-purple text-dark fw-bold shadow-sm px-3 py-1 mb-3">{{ pro.category.name }}</div>
+                </div>
+
+                <div class="d-flex justify-content-between small text-muted mb-4 px-1"
+                    style="z-index: 1; position: relative;">
+                    <span class="d-flex align-items-center"><i class="bi bi-star-fill text-warning me-2"></i> {{ pro.safety_score }}</span>
+                    <span class="d-flex align-items-center"><i class="bi bi-award me-1"></i> {{ pro.experience_years }}y
+                        Exp</span>
+                </div>
+
+                <a href="{% url 'book_professional' pro.id %}"
+                    class="btn btn-premium btn-sm w-100 rounded-pill py-2 position-relative shadow-sm"
+                    style="z-index: 1;">
+                    Instant Book
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .bg-purple {
+        background-color: #a855f7;
+    }
+
+    .text-purple {
+        color: #a855f7;
+    }
+
+    .border-purple {
+        border-color: #a855f7;
+    }
+
+    .category-icon-wrapper {
+        width: 64px;
+        height: 64px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .glass-card:hover .category-icon-wrapper {
+        background: var(--primary-gradient);
+        transform: scale(1.1);
+    }
+
+    .glass-card:hover .category-icon-wrapper i {
+        color: white !important;
+    }
+</style>
+{% endblock %}
+
+

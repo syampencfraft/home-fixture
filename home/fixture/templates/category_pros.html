@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+
+                    <h2 class="card-title text-center mb-4">
+                        Book {{ pro.user.username }}
+                    </h2>
+
+                    <p class="text-muted text-center mb-4">
+                        Select a service and time slot to book your home fix.
+                    </p>
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <!-- SERVICE SELECTION -->
+                        <div class="mb-3">
+                            <label for="service" class="form-label fw-bold">
+                                Select Service
+                            </label>
+
+                            <select name="service" id="service" class="form-select" required>
+                                <option value="" disabled selected>
+                                    Choose a service...
+                                </option>
+
+                                {% for s in services %}
+                                    <option value="{{ s.id }}"
+                                        {% if selected_service_id == s.id %}
+                                            selected
+                                        {% endif %}>
+                                        {{ s.name }} (${{ s.base_price }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- BOOKING DATE -->
+                        <div class="mb-3">
+                            <label for="booking_date" class="form-label fw-bold">
+                                Preferred Date
+                            </label>
+                            <input type="date"
+                                   name="booking_date"
+                                   id="booking_date"
+                                   class="form-control"
+                                   required>
+                        </div>
+
+                        <!-- TIME SLOT -->
+                        <div class="mb-4">
+                            <label for="time_slot" class="form-label fw-bold">
+                                Time Slot
+                            </label>
+
+                            <select name="time_slot" id="time_slot" class="form-select" required>
+                                <option value="Morning">
+                                    Morning (8:00 AM – 12:00 PM)
+                                </option>
+                                <option value="Afternoon" selected>
+                                    Afternoon (12:00 PM – 4:00 PM)
+                                </option>
+                                <option value="Evening">
+                                    Evening (4:00 PM – 8:00 PM)
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- BUTTONS -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                Send Booking Request
+                            </button>
+
+                            <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Prevent past date selection
+    document.getElementById('booking_date').min =
+        new Date().toISOString().split('T')[0];
+</script>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="glass-card mb-4 sticky-top" style="top: 100px;">
+            <h4 class="fw-bold mb-4">Filter <span class="text-gradient">Services</span></h4>
+            <form method="GET">
+                {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold text-muted">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+                {% endfor %}
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-premium">Apply Filters</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <h3 class="fw-bold mb-4">Available <span class="text-gradient">Services</span></h3>
+        <div class="row g-4">
+            {% for service in services %}
+            <div class="col-md-6">
+                <div class="glass-card h-100 p-4 transition-all hover-translate">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span
+                            class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-20 px-3 py-2">{{
+                            service.category.name }}</span>
+                        <h5 class="fw-bold text-info m-0">₹{{ service.base_price }}</h5>
+                    </div>
+                    <h4 class="fw-bold mb-2">{{ service.name }}</h4>
+                    <p class="text-muted small mb-4">{{ service.description|truncatewords:15 }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="small text-muted"><i class="bi bi-clock me-1"></i> {{ service.duration }}
+                            mins</span>
+                        <a href="{% url 'service_professionals' service.id %}"
+                            class="btn btn-outline-light btn-sm rounded-pill px-3">View Pros</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center p-5">
+                <i class="bi bi-search fs-1 text-muted mb-3 d-block"></i>
+                <h5 class="text-muted">No services found matching your criteria.</h5>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .hover-translate:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.08);
+    }
+</style>
+{% endblock %}

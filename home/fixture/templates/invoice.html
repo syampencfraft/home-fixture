@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-0" id="invoice-card">
+                <div class="card-body p-5">
+                    <div class="d-flex justify-content-between mb-5">
+                        <div>
+                            <h2 class="fw-bold text-primary mb-0">HomeFixr</h2>
+                            <p class="text-muted">Digital Service Invoice</p>
+                        </div>
+                        <div class="text-end">
+                            <h4 class="mb-0">Invoice #{{ invoice.invoice_number }}</h4>
+                            <p class="text-muted small">Date: {{ invoice.generated_at|date:"F j, Y" }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-5">
+                        <div class="col-6">
+                            <p class="text-muted mb-1">Billed To:</p>
+                            <h5 class="mb-0">{{ booking.customer.username }}</h5>
+                            <p class="small text-muted">{{ booking.customer.email }}</p>
+                        </div>
+                        <div class="col-6 text-end">
+                            <p class="text-muted mb-1">Service Provider:</p>
+                            <h5 class="mb-0">{{ booking.professional.user.username }}</h5>
+                            <p class="small text-muted">{{ booking.professional.category.name }} Specialist</p>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive mb-5">
+                        <table class="table">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th>Service Description</th>
+                                    <th class="text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <h6 class="mb-0">{{ booking.service.name }}</h6>
+                                        <small class="text-muted">Scheduled for {{ booking.booking_date|date:"M d, Y" }}
+                                            ({{ booking.time_slot }})</small>
+                                    </td>
+                                    <td class="text-end fw-bold">${{ invoice.total_amount }}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td class="text-end fw-bold">Total Amount Paid</td>
+                                    <td class="text-end h4 fw-bold text-primary">${{ invoice.total_amount }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div class="text-center mt-5">
+                        <p class="text-muted small">Thank you for choosing HomeFixr for your home needs!</p>
+                        <button onclick="window.print()" class="btn btn-outline-secondary btn-sm d-print-none">Print
+                            Invoice</button>
+                        <a href="{% url 'customer_bookings' %}" class="btn btn-primary btn-sm d-print-none">Back to
+                            Bookings</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @media print {
+
+        .navbar,
+        .btn-primary,
+        .btn-outline-secondary {
+            display: none !important;
+        }
+
+        body {
+            background-color: white !important;
+        }
+
+        .container {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        #invoice-card {
+            box-shadow: none !important;
+            border: 1px solid #eee !important;
+        }
+    }
+</style>
+{% endblock %}
