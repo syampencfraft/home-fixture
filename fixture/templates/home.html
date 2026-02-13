@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-5">
+    <div class="col-lg-8">
+        <h1 class="fw-bold display-5 mb-3">Welcome to <span class="text-gradient">HomeFixr</span></h1>
+        <p class="text-muted fs-5">Secure, reliable home services at your fingertips. From plumbing to electrical, we've
+            got you covered.</p>
+    </div>
+</div>
+
+<!-- Categories Section -->
+<div class="mb-5">
+    <h3 class="fw-bold mb-4">Service <span class="text-gradient">Categories</span></h3>
+    <div class="row g-4">
+        {% for cat in categories %}
+        <div class="col-6 col-md-3">
+            <a href="{% url 'category_professionals' cat.id %}" class="text-decoration-none">
+                <div class="glass-card text-center p-4 transition-all hover-translate">
+                    {% if cat.icon %}
+                    <img src="{{ cat.icon.url }}" width="48" height="48" class="mb-3">
+                    {% else %}
+                    <i class="bi bi-tools fs-1 text-info mb-3 d-block"></i>
+                    {% endif %}
+                    <h5 class="fw-bold text-light mb-0">{{ cat.name }}</h5>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Featured Professionals Section -->
+<div class="mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold m-0">Top <span class="text-gradient">Professionals</span></h3>
+        <a href="{% url 'search_services' %}" class="text-info text-decoration-none small">View all <i
+                class="bi bi-arrow-right"></i></a>
+    </div>
+    <div class="row g-4">
+        {% for pro in top_pros %}
+        <div class="col-md-3">
+            <div class="glass-card h-100 p-4">
+                <div class="text-center mb-3">
+                    {% if pro.profile_picture %}
+                    <img src="{{ pro.profile_picture.url }}" class="rounded-circle mb-3" width="80" height="80"
+                        style="object-fit: cover; border: 3px solid rgba(168, 85, 247, 0.3);">
+                    {% else %}
+                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white mx-auto mb-3"
+                        style="width: 80px; height: 80px;">
+                        <i class="bi bi-person fs-1"></i>
+                    </div>
+                    {% endif %}
+                    <h5 class="fw-bold mb-1">{{ pro.user.full_name|default:pro.user.username }}</h5>
+                    <div
+                        class="badge bg-purple bg-opacity-10 text-purple border border-purple border-opacity-20 px-2 py-1 mb-2">
+                        {{ pro.category.name }}
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between small text-muted mb-3">
+                    <span><i class="bi bi-star-fill text-warning me-1"></i> {{ pro.safety_score }}</span>
+                    <span>{{ pro.experience_years }} Years Exp</span>
+                </div>
+                <a href="{% url 'book_professional' pro.id %}"
+                    class="btn btn-outline-light btn-sm w-100 rounded-pill">Book Now</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .bg-purple {
+        background-color: #a855f7;
+    }
+
+    .text-purple {
+        color: #a855f7;
+    }
+
+    .border-purple {
+        border-color: #a855f7;
+    }
+
+    .hover-translate:hover {
+        transform: translateY(-8px);
+        background: rgba(255, 255, 255, 0.08);
+        border-color: #a855f7;
+    }
+</style>
+{% endblock %}

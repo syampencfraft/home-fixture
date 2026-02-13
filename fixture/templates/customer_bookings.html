@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row align-items-center mb-5">
+    <div class="col-md-6">
+        <h1 class="fw-bold m-0">My <span class="text-gradient">Bookings</span></h1>
+        <p class="text-muted">Track and manage your service history</p>
+    </div>
+    <div class="col-md-6 text-md-end">
+        <a href="{% url 'home' %}" class="btn btn-premium rounded-pill px-4">Book New Service</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    {% for booking in bookings %}
+    <div class="col-md-6 col-lg-4">
+        <div class="glass-card h-100 p-4 transition-all hover-translate">
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <div class="badge bg-purple bg-opacity-10 text-purple border border-purple border-opacity-20 px-3 py-1">
+                    Job #{{ booking.id }}
+                </div>
+                <div class="small text-muted"><i class="bi bi-calendar3 me-1"></i> {{ booking.booking_date|date:"M j, Y"
+                    }}</div>
+            </div>
+
+            <h4 class="fw-bold mb-1">{{ booking.service.name }}</h4>
+            <div class="d-flex align-items-center text-muted small mb-4">
+                <i class="bi bi-person me-1"></i> Pro: {{ booking.professional.user.username }}
+            </div>
+
+            <div class="p-3 rounded bg-black bg-opacity-20 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="small text-muted">Status</span>
+                    <span
+                        class="badge {% if booking.status == 'COMPLETED' %}bg-success{% elif booking.status == 'PENDING' %}bg-warning text-dark{% else %}bg-info{% endif %} bg-opacity-10 text-{% if booking.status == 'COMPLETED' %}success{% elif booking.status == 'PENDING' %}warning{% else %}info{% endif %} smaller px-2">
+                        {{ booking.status }}
+                    </span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="small text-muted">Amount</span>
+                    <span class="fw-bold">₹{{ booking.service.base_price }}</span>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2">
+                <a href="{% url 'job_details' booking.id %}" class="btn btn-outline-light rounded-pill btn-sm py-2">View
+                    Details</a>
+
+                {% if booking.status == 'CONFIRMED' %}
+                <a href="{% url 'track_job' booking.id %}" class="btn btn-premium btn-sm py-2 rounded-pill"><i
+                        class="bi bi-geo-alt me-1"></i> Track Pro</a>
+                {% elif booking.status == 'COMPLETED' %}
+                {% if not booking.payment or booking.payment.payment_status != 'SUCCESS' %}
+                <a href="{% url 'process_payment' booking.id %}" class="btn btn-success btn-sm py-2 rounded-pill">Pay
+                    Invoice</a>
+                {% elif not booking.review %}
+                <a href="{% url 'submit_review' booking.id %}" class="btn btn-warning btn-sm py-2 rounded-pill">Rate
+                    Service</a>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <div class="glass-card p-5">
+            <i class="bi bi-calendar-x fs-1 text-muted mb-3 d-block"></i>
+            <h3>No Bookings Found</h3>
+            <p class="text-muted">You haven't booked any services yet.</p>
+            <a href="{% url 'home' %}" class="btn btn-premium mt-3">Browse Services</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .bg-purple {
+        background-color: #a855f7;
+    }
+
+    .text-purple {
+        color: #a855f7;
+    }
+
+    .border-purple {
+        border-color: #a855f7;
+    }
+</style>
+{% endblock %}

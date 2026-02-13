@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="glass-card mb-4 overflow-hidden">
+            <!-- Header Section -->
+            <div
+                class="p-4 border-bottom border-white border-opacity-10 d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="fw-bold m-0"><span class="text-gradient">Track</span> Profile</h2>
+                    <p class="text-muted small m-0">Order #{{ booking.id }} • {{ booking.service.name }}</p>
+                </div>
+                <div class="text-end">
+                    <span
+                        class="badge bg-primary bg-opacity-20 text-primary px-3 py-2 border border-primary border-opacity-20">
+                        {{ tracking.get_status_display }}
+                    </span>
+                </div>
+            </div>
+
+            {% if booking.requirements %}
+            <div class="px-4 py-2 bg-info bg-opacity-10 border-bottom border-info border-opacity-10">
+                <div class="small text-info fw-bold"><i class="bi bi-info-circle me-1"></i> Note from Pro: <span
+                        class="text-white fw-normal ms-2">{{ booking.requirements }}</span></div>
+            </div>
+            {% endif %}
+
+            <div class="row g-0">
+                <!-- Map Section (Mock) -->
+                <div class="col-md-7 border-end border-white border-opacity-10 bg-black bg-opacity-40"
+                    style="min-height: 400px; position: relative;">
+                    <div class="p-4">
+                        <div class="rounded-4 overflow-hidden shadow-lg border border-white border-opacity-20"
+                            style="height: 350px; background: #1a1a2e; position: relative;">
+                            <!-- Mock Map UI -->
+                            <div class="position-absolute w-100 h-100"
+                                style="background-image: radial-gradient(#ffffff11 1px, transparent 1px); background-size: 20px 20px;">
+                            </div>
+
+                            <!-- Pro Pulse -->
+                            <div class="position-absolute top-50 start-50 translate-middle">
+                                <div class="pulse-container">
+                                    <div class="pulse-ring"></div>
+                                    <div class="pro-marker shadow-lg">
+                                        <i class="bi bi-person-fill text-white"></i>
+                                    </div>
+                                </div>
+                                <div class="badge bg-black bg-opacity-75 border border-white border-opacity-20 mt-2 px-3 backdrop-blur py-1"
+                                    style="transform: translate(-35%, 10px);">
+                                    {{ booking.professional.user.username }} is nearby
+                                </div>
+                            </div>
+
+                            <!-- Customer Marker -->
+                            <div class="position-absolute bottom-0 end-0 m-4">
+                                <div
+                                    class="badge bg-info bg-opacity-20 text-info border border-info border-opacity-20 p-2 rounded-pill d-flex align-items-center gap-2">
+                                    <i class="bi bi-house-door-fill"></i>
+                                    <span>Your Location</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Section -->
+                <div class="col-md-5 p-4 bg-white bg-opacity-5">
+                    <h5 class="fw-bold mb-4">Job Status</h5>
+                    <div class="stepper-horizontal">
+                        {% for step in steps %}
+                        <div class="step-item mb-4 d-flex align-items-start">
+                            <div class="step-icon-container me-3">
+                                <div class="step-line {% if step.completed %}active{% endif %}"></div>
+                                <div class="step-circle {% if step.completed %}active{% endif %}">
+                                    {% if step.completed %}
+                                    <i class="bi bi-check-lg text-white"></i>
+                                    {% else %}
+                                    <div class="circle-inner"></div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="step-content">
+                                <div
+                                    class="fw-bold small {% if step.completed %}text-white{% else %}text-muted{% endif %}">
+                                    {{ step.label }}</div>
+                                <div class="smaller text-muted">Time: {% if step.completed %}{{
+                                    booking.updated_at|date:"H:i" }}{% else %}Wait{% endif %}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mt-4 p-3 rounded-4 bg-black bg-opacity-20 border border-white border-opacity-10">
+                        <div class="d-flex align-items-center gap-3">
+                            <img src="{{ booking.professional.user.profile_picture.url|default:'#'  }}"
+                                class="rounded-circle" width="45" height="45" style="object-fit: cover;">
+                            <div>
+                                <div class="fw-bold small">{{ booking.professional.user.username }}</div>
+                                <div class="smaller text-muted">{{ booking.service.category.name }} Specialist</div>
+                            </div>
+                            <a href="tel:{{ booking.professional.user.phone_number }}"
+                                class="btn btn-outline-light rounded-circle p-2 ms-auto"><i
+                                    class="bi bi-telephone-fill"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a href="{% url 'job_details' booking.id %}" class="btn btn-link text-muted">View Full Job History</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .pulse-container {
+        position: relative;
+        width: 40px;
+        height: 40px;
+    }
+
+    .pulse-ring {
+        border: 3px solid #6366f1;
+        border-radius: 50%;
+        height: 40px;
+        width: 40px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        animation: pulse 2s infinite ease-out;
+    }
+
+    .pro-marker {
+        width: 40px;
+        height: 40px;
+        background: #6366f1;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 2;
+        border: 3px solid rgba(255, 255, 255, 0.2);
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        100% {
+            transform: scale(3.5);
+            opacity: 0;
+        }
+    }
+
+    .step-icon-container {
+        position: relative;
+        width: 24px;
+    }
+
+    .step-line {
+        position: absolute;
+        left: 11px;
+        top: 24px;
+        bottom: -24px;
+        width: 2px;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .step-line.active {
+        background: #6366f1;
+    }
+
+    .step-item:last-child .step-line {
+        display: none;
+    }
+
+    .step-circle {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #1e293b;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    .step-circle.active {
+        background: #6366f1;
+        border-color: #6366f1;
+        box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+    }
+
+    .circle-inner {
+        width: 6px;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+    }
+
+    .smaller {
+        font-size: 0.75rem;
+    }
+
+    .backdrop-blur {
+        backdrop-filter: blur(8px);
+    }
+</style>
+{% endblock %}

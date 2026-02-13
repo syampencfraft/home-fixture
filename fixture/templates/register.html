@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="glass-card">
+            <h2 class="text-center mb-4 fw-bold">Join <span class="text-gradient">HomeFixr</span></h2>
+            <p class="text-center text-muted mb-4">Connect with trusted professionals today</p>
+
+            <form method="POST" novalidate enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold text-muted">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                    <div class="form-text small text-info">{{ field.help_text }}</div>
+                    {% endif %}
+                    {% for error in field.errors %}
+                    <div class="text-danger small mt-1">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-premium">Create Account</button>
+                </div>
+            </form>
+
+            <div class="mt-4 text-center">
+                <p class="small text-muted">Already have an account? <a href="{% url 'login' %}"
+                        class="text-info text-decoration-none">Login here</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Styling for Radio buttons in role selection */
+    ul#id_role {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        gap: 1rem;
+    }
+
+    ul#id_role li {
+        flex: 1;
+    }
+
+    ul#id_role input[type="radio"] {
+        display: none;
+    }
+
+    ul#id_role label {
+        display: block;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    ul#id_role input[type="radio"]:checked+label {
+        background: var(--primary-gradient);
+        border-color: transparent;
+        color: white;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="glass-card">
+                <h2 class="text-center mb-4 fw-bold">Book <span class="text-gradient">Professional</span></h2>
+                <div class="d-flex align-items-center mb-4 p-3 rounded bg-white bg-opacity-10">
+                    <div class="me-3">
+                        {% if pro.profile_picture %}
+                        <img src="{{ pro.profile_picture.url }}" class="rounded-circle" width="60" height="60"
+                            style="object-fit: cover;">
+                        {% else %}
+                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white"
+                            style="width: 60px; height: 60px;">
+                            <i class="bi bi-person fs-3"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h5 class="m-0 fw-bold">{{ pro.user.full_name|default:pro.user.username }}</h5>
+                        <p class="small text-info m-0">{{ pro.category.name }} Specialist</p>
+                        <div class="text-warning small">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-half"></i>
+                            <span class="text-muted ms-2">(4.5)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="mb-3">
+                        {% if field.field.widget.input_type == 'checkbox' %}
+                        <div class="form-check form-switch mt-4 mb-2">
+                            {{ field }}
+                            <label class="form-check-label ps-2 fw-bold">{{ field.label }}</label>
+                        </div>
+                        {% else %}
+                        <label class="form-label small fw-semibold text-muted">{{ field.label }}</label>
+                        {{ field }}
+                        {% endif %}
+                        {% if field.errors %}
+                        <div class="text-danger small mt-1">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-premium py-3">Proceed to Payment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

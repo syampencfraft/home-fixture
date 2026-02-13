@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-8">
+        <div class="row g-4">
+            <!-- Order Summary -->
+            <div class="col-md-5 order-md-2">
+                <div class="glass-card p-4">
+                    <h5 class="fw-bold mb-4">Service <span class="text-gradient">Summary</span></h5>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted small">Job Reference</span>
+                        <span class="small fw-medium">#{{ booking.id }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="text-muted small">Service</span>
+                        <span class="small fw-medium text-end">{{ booking.service.name }}</span>
+                    </div>
+
+                    <div class="p-3 rounded-4 bg-black bg-opacity-20 border border-white border-opacity-5 mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted small">Base Price</span>
+                            <span class="small">₹{{ booking.service.base_price }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted small">Service Fee</span>
+                            <span class="small">₹0.00</span>
+                        </div>
+                        <hr class="border-white border-opacity-10 px-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold">Total Amount</span>
+                            <span class="h4 fw-bold m-0 text-gradient">₹{{ booking.service.base_price }}</span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-3 p-3 rounded-4 bg-white bg-opacity-5">
+                        <div class="bg-primary bg-opacity-20 p-2 rounded-circle">
+                            <i class="bi bi-shield-lock-fill text-primary"></i>
+                        </div>
+                        <p class="smaller text-muted m-0">Secure SSL encrypted payment processing.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Form -->
+            <div class="col-md-7 order-md-1">
+                <div class="glass-card p-5">
+                    <h2 class="fw-bold mb-4">Secure <span class="text-gradient">Checkout</span></h2>
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="mb-4">
+                            <label class="form-label small fw-semibold text-muted mb-3">Select Payment Method</label>
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <input type="radio" class="btn-check" name="payment_method" id="card"
+                                        value="CREDIT_CARD" checked>
+                                    <label
+                                        class="btn btn-outline-light w-100 py-3 rounded-4 d-flex flex-column align-items-center gap-2"
+                                        for="card">
+                                        <i class="bi bi-credit-card fs-4"></i>
+                                        <span class="smaller">Card</span>
+                                    </label>
+                                </div>
+                                <div class="col-6">
+                                    <input type="radio" class="btn-check" name="payment_method" id="upi" value="UPI">
+                                    <label
+                                        class="btn btn-outline-light w-100 py-3 rounded-4 d-flex flex-column align-items-center gap-2"
+                                        for="upi">
+                                        <i class="bi bi-phone fs-4"></i>
+                                        <span class="smaller">UPI</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% for field in form %}
+                        {% if field.name != 'payment_method' and field.name != 'booking' and field.name != 'amount' and
+                        field.name != 'payment_status' %}
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold text-muted">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                            <div class="text-danger smaller mt-1">{{ field.errors }}</div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+
+                        <div class="d-grid mt-5">
+                            <button type="submit" class="btn btn-premium py-3 rounded-pill fw-bold">
+                                Pay ₹{{ booking.service.base_price }}
+                            </button>
+                            <a href="{% url 'job_details' booking.id %}" class="btn btn-link text-muted mt-3">Cancel
+                                Payment</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

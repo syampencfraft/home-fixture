@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="glass-card p-5">
+            <h2 class="text-center mb-4 fw-bold">Update <span class="text-gradient">Pro Profile</span></h2>
+            <p class="text-center text-muted mb-4">Keep your professional details up to date to attract more customers.
+            </p>
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% for field in form %}
+                <div class="mb-4">
+                    <label class="form-label small fw-semibold text-muted d-flex justify-content-between">
+                        {{ field.label }}
+                        {% if field.field.required %}
+                        <span class="badge bg-info bg-opacity-10 text-info smaller px-2 py-1">Required</span>
+                        {% endif %}
+                    </label>
+
+                    {% if field.name == 'category' %}
+                    <div class="input-group">
+                        <span
+                            class="input-group-text bg-white bg-opacity-5 border-white border-opacity-10 text-muted"><i
+                                class="bi bi-tag"></i></span>
+                        {{ field }}
+                    </div>
+                    {% elif field.name == 'experience_years' %}
+                    <div class="input-group">
+                        <span
+                            class="input-group-text bg-white bg-opacity-5 border-white border-opacity-10 text-muted"><i
+                                class="bi bi-briefcase"></i></span>
+                        {{ field }}
+                    </div>
+                    {% else %}
+                    {{ field }}
+                    {% endif %}
+
+                    {% if field.help_text %}
+                    <div class="form-text smaller text-muted opacity-75">{{ field.help_text }}</div>
+                    {% endif %}
+
+                    {% if field.errors %}
+                    {% for error in field.errors %}
+                    <div class="text-danger smaller mt-1"><i class="bi bi-exclamation-circle me-1"></i> {{ error }}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <div class="d-grid mt-5">
+                    <button type="submit" class="btn btn-premium py-3">
+                        <i class="bi bi-check-circle me-2"></i> Save Changes
+                    </button>
+                    <a href="{% url 'profile_view' %}" class="btn btn-link text-muted mt-3">Cancel and go back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
