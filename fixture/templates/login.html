@@ -2,71 +2,66 @@
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-4">
-        <div class="card shadow">
-            <div class="card-body">
-                <h3 class="card-title text-center mb-4">Login to HomeFixr</h3>
+    <!-- Use proper column size -->
+    <div class="col-md-5">
+        <div class="glass-card">
+            <h2 class="text-center mb-4 fw-bold">Welcome <span class="text-gradient">Back</span>
+            </h2>
+            <p class="text-center text-muted mb-4">Login to manage your services</p>
 
-                <form method="POST">
-                    {% csrf_token %}
+            <!-- Display messages if any -->
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} mb-3">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
 
-                    <!-- Render form fields with Bootstrap styling -->
-                    {% for field in form %}
-                    <div class="mb-3">
-                        <label class="form-label">{{ field.label }}</label>
-                        {{ field }}
-                        {% if field.errors %}
-                        <div class="col-md-5">
-                            <div class="glass-card">
-                                <h2 class="text-center mb-4 fw-bold">Welcome <span class="text-gradient">Back</span>
-                                </h2>
-                                <p class="text-center text-muted mb-4">Login to manage your services</p>
+            <form method="POST">
+                {% csrf_token %}
 
-                                <form method="POST">
-                                    {% csrf_token %}
-
-                                    {% for field in form %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-semibold text-muted">{{ field.label }}</label>
-                                        {{ field }}
-                                        {% for error in field.errors %}
-                                        <div class="text-danger small mt-1">{{ error }}</div>
-                                        {% endfor %}
-                                    </div>
-                                    {% endfor %}
-
-                                    <div class="d-grid mt-4">
-                                        <button type="submit" class="btn btn-premium">Login</button>
-                                    </div>
-                                </form>
-
-                                <div class="mt-4 text-center">
-                                    <p class="small text-muted">Don't have an account? <a href="{% url 'register' %}"
-                                            class="text-info text-decoration-none">Join HomeFixr</a></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">
-                        {{ message }}
-                    </div>
-                    {% endfor %}
+                {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold text-muted">{{ field.label }}</label>
+                    {{ field }}
+                    <!-- Check for field help text if needed -->
+                    {% if field.help_text %}
+                    <div class="form-text small text-info">{{ field.help_text }}</div>
                     {% endif %}
 
-                    <!-- Add simple CSS to make Django forms look like Bootstrap -->
-                    <style>
-                        input {
-                            display: block;
-                            width: 100%;
-                            padding: 0.375rem 0.75rem;
-                            font-size: 1rem;
-                            font-weight: 400;
-                            line-height: 1.5;
-                            color: #212529;
-                            background-color: #fff;
-                            border: 1px solid #ced4da;
-                            border-radius: 0.375rem;
-                        }
-                    </style>
-                    {% endblock %}
+                    {% for error in field.errors %}
+                    <div class="text-danger small mt-1">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-premium">Login</button>
+                </div>
+            </form>
+
+            <div class="mt-4 text-center">
+                <p class="small text-muted">Don't have an account? <a href="{% url 'register' %}"
+                        class="text-info text-decoration-none">Join HomeFixr</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add simple CSS to make Django forms look like Bootstrap -->
+<style>
+    input {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 0.375rem;
+    }
+</style>
+{% endblock %}
