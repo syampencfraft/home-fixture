@@ -16,30 +16,10 @@
                     Trusted, transparent, and hassle-free.
                 </p>
 
-                <!-- Search Bar -->
-                <div class="glass-card p-2 mb-5 mx-auto" style="max-width: 600px; border-radius: 50px;">
-                    <form action="{% url 'search_services' %}" method="GET" class="d-flex w-100">
-                        <div class="input-group w-100">
-                            <span class="input-group-text bg-transparent border-0 ps-3">
-                                <i class="bi bi-search text-muted"></i>
-                            </span>
-                            <input type="text" name="q"
-                                class="form-control border-0 bg-transparent shadow-none text-white"
-                                placeholder="What service do you need today?" aria-label="Search services"
-                                style="font-size: 1.1rem;">
-                            <button class="btn btn-premium rounded-pill px-4" type="submit">Search</button>
-                        </div>
-                    </form>
-                </div>
-
                 <div class="d-flex justify-content-center gap-3">
-                    <a href="{% url 'search_services' %}"
-                        class="btn btn-outline-light rounded-pill px-4 py-2 fw-semibold">
-                        <i class="bi bi-grid me-2"></i>Browse Services
-                    </a>
                     {% if not user.is_authenticated %}
-                    <a href="{% url 'register' %}" class="btn btn-premium rounded-pill px-4 py-2">
-                        <i class="bi bi-person-plus me-2"></i>Join as Pro
+                    <a href="{% url 'register' %}" class="btn btn-premium rounded-pill px-5 py-3 fs-5">
+                        <i class="bi bi-person-plus me-2"></i>Join as Professional
                     </a>
                     {% endif %}
                 </div>
@@ -108,8 +88,8 @@
             <div class="col-md-3">
                 <div class="glass-card p-4 h-100">
                     <div class="display-4 fw-bold text-muted opacity-25 mb-3">01</div>
-                    <h5 class="fw-bold mb-2">Search</h5>
-                    <p class="text-muted small mb-0">Find the precise service you need from our catalog</p>
+                    <h5 class="fw-bold mb-2">Select Category</h5>
+                    <p class="text-muted small mb-0">Choose the type of service you need from our catalog</p>
                 </div>
             </div>
             <div class="col-md-1 d-none d-md-block text-muted opacity-50">
@@ -118,7 +98,7 @@
             <div class="col-md-3">
                 <div class="glass-card p-4 h-100">
                     <div class="display-4 fw-bold text-muted opacity-25 mb-3">02</div>
-                    <h5 class="fw-bold mb-2">Book</h5>
+                    <h5 class="fw-bold mb-2">Book Pro</h5>
                     <p class="text-muted small mb-0">Choose a verified pro and schedule your time</p>
                 </div>
             </div>

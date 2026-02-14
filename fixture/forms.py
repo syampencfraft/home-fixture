@@ -105,10 +105,14 @@ class BookingForm(forms.ModelForm):
         model = Booking
         fields = ['service', 'booking_date', 'time_slot', 'service_address']
         widgets = {
-            'service': forms.Select(attrs={'class': 'form-control'}),
+            'service': forms.Select(attrs={'class': 'form-select'}),
             'booking_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'time_slot': forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
-            'service_address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'time_slot': forms.Select(attrs={'class': 'form-select'}, choices=[
+                ('Morning', 'Morning (8:00 AM – 12:00 PM)'),
+                ('Afternoon', 'Afternoon (12:00 PM – 4:00 PM)'),
+                ('Evening', 'Evening (4:00 PM – 8:00 PM)'),
+            ]),
+            'service_address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Enter service location...'}),
         }
     
     confirmation = forms.BooleanField(required=True, label="Booking confirmation")

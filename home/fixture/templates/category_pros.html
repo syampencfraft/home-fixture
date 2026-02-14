@@ -2,96 +2,100 @@
 
 {% block content %}
 <div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-4">
-
-                    <h2 class="card-title text-center mb-4">
-                        Book {{ pro.user.username }}
-                    </h2>
-
-                    <p class="text-muted text-center mb-4">
-                        Select a service and time slot to book your home fix.
-                    </p>
-
-                    <form method="POST">
-                        {% csrf_token %}
-
-                        <!-- SERVICE SELECTION -->
-                        <div class="mb-3">
-                            <label for="service" class="form-label fw-bold">
-                                Select Service
-                            </label>
-
-                            <select name="service" id="service" class="form-select" required>
-                                <option value="" disabled selected>
-                                    Choose a service...
-                                </option>
-
-                                {% for s in services %}
-                                    <option value="{{ s.id }}"
-                                        {% if selected_service_id == s.id %}
-                                            selected
-                                        {% endif %}>
-                                        {{ s.name }} (${{ s.base_price }})
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-
-                        <!-- BOOKING DATE -->
-                        <div class="mb-3">
-                            <label for="booking_date" class="form-label fw-bold">
-                                Preferred Date
-                            </label>
-                            <input type="date"
-                                   name="booking_date"
-                                   id="booking_date"
-                                   class="form-control"
-                                   required>
-                        </div>
-
-                        <!-- TIME SLOT -->
-                        <div class="mb-4">
-                            <label for="time_slot" class="form-label fw-bold">
-                                Time Slot
-                            </label>
-
-                            <select name="time_slot" id="time_slot" class="form-select" required>
-                                <option value="Morning">
-                                    Morning (8:00 AM – 12:00 PM)
-                                </option>
-                                <option value="Afternoon" selected>
-                                    Afternoon (12:00 PM – 4:00 PM)
-                                </option>
-                                <option value="Evening">
-                                    Evening (4:00 PM – 8:00 PM)
-                                </option>
-                            </select>
-                        </div>
-
-                        <!-- BUTTONS -->
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                Send Booking Request
-                            </button>
-
-                            <a href="{% url 'home' %}" class="btn btn-outline-secondary">
-                                Cancel
-                            </a>
-                        </div>
-
-                    </form>
-                </div>
-            </div>
+    <div class="d-flex justify-content-between align-items-end mb-5">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-2">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}"
+                            class="text-decoration-none text-muted">Home</a></li>
+                    <li class="breadcrumb-item active text-gradient fw-bold" aria-current="page">{{ category.name }}
+                    </li>
+                </ol>
+            </nav>
+            <h1 class="fw-bold display-5">Available <span class="text-gradient">Professionals</span></h1>
+            <p class="text-muted fs-5">Find the best {{ category.name }} specialists for your home needs.</p>
+        </div>
+        <div
+            class="badge bg-purple bg-opacity-10 text-dark border border-purple border-opacity-20 px-3 py-2 rounded-pill mb-2">
+            {{ professionals|length }} Pros found
         </div>
     </div>
 </div>
 
-<script>
-    // Prevent past date selection
-    document.getElementById('booking_date').min =
-        new Date().toISOString().split('T')[0];
-</script>
+<div class="row g-4">
+    {% for pro in professionals %}
+    <div class="col-md-4 col-lg-3">
+        <div class="glass-card h-100 p-4 transition-all hover-translate">
+            <div class="text-center mb-4">
+                {% if pro.profile_picture %}
+                <img src="{{ pro.profile_picture.url }}" class="rounded-circle mb-3 shadow-sm" width="100" height="100"
+                    style="object-fit: cover; border: 3px solid rgba(168, 85, 247, 0.3);">
+                {% else %}
+                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white mx-auto mb-3 shadow-sm"
+                    style="width: 100px; height: 100px;">
+                    <i class="bi bi-person fs-1"></i>
+                </div>
+                {% endif %}
+                <h5 class="fw-bold mb-1">{{ pro.user.full_name|default:pro.user.username }}</h5>
+                <div class="text-warning small mb-2">
+                    <i class="bi bi-star-fill"></i> {{ pro.safety_score|floatformat:1 }}
+                    <span class="text-muted ms-1">({{ pro.total_jobs }} jobs)</span>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <p class="small text-muted mb-2 line-clamp-3">{{ pro.bio|default:"No bio available" }}</p>
+                <div class="d-flex justify-content-between align-items-center smaller text-light opacity-75">
+                    <span><i class="bi bi-briefcase me-1"></i> {{ pro.experience_years }} Years Exp</span>
+                    <span><i class="bi bi-check2-circle me-1 text-success"></i> Verified</span>
+                </div>
+            </div>
+
+            <a href="{% url 'book_professional' pro.id %}" class="btn btn-premium btn-sm w-100 rounded-pill py-2">
+                Book Service
+            </a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <div class="glass-card d-inline-block px-5">
+            <i class="bi bi-person-exclamation fs-1 text-muted mb-3 d-block"></i>
+            <h4 class="fw-bold">No Professionals Available</h4>
+            <p class="text-muted mb-4">We're still expanding! Check back soon for more {{ category.name }}
+                specialists.</p>
+            <a href="{% url 'search_services' %}" class="btn btn-outline-light rounded-pill px-4">Browse All
+                Services</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+</div>
+
+<style>
+    .bg-purple {
+        background-color: #a855f7;
+    }
+
+    .text-purple {
+        color: #a855f7;
+    }
+
+    .border-purple {
+        border-color: #a855f7;
+    }
+
+    .hover-translate:hover {
+        transform: translateY(-10px);
+        background: rgba(255, 255, 255, 0.08);
+        border-color: #a855f7;
+    }
+
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
 {% endblock %}

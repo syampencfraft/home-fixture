@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -77,8 +77,10 @@
                         </div>
 
                         {% for field in form %}
-                        {% if field.name != 'payment_method' and field.name != 'booking' and field.name != 'amount' and
-                        field.name != 'payment_status' %}
+                        {% if field.name != 'payment_method' %}
+                        {% if field.name != 'booking' %}
+                        {% if field.name != 'amount' %}
+                        {% if field.name != 'payment_status' %}
                         <div class="mb-3">
                             <label class="form-label small fw-semibold text-muted">{{ field.label }}</label>
                             {{ field }}
@@ -87,14 +89,19 @@
                             {% endif %}
                         </div>
                         {% endif %}
+                        {% endif %}
+                        {% endif %}
+                        {% endif %}
                         {% endfor %}
 
                         <div class="d-grid mt-5">
-                            <button type="submit" class="btn btn-premium py-3 rounded-pill fw-bold">
+                            <button type="submit" class="btn btn-premium py-3 rounded-pill fw-bold mb-3">
                                 Pay ₹{{ booking.service.base_price }}
                             </button>
-                            <a href="{% url 'job_details' booking.id %}" class="btn btn-link text-muted mt-3">Cancel
-                                Payment</a>
+                            <a href="{% url 'job_details' booking.id %}"
+                                class="btn btn-outline-light py-3 rounded-pill fw-bold text-center">
+                                <i class="bi bi-arrow-left me-2"></i> Cancel & Return to Job
+                            </a>
                         </div>
                     </form>
                 </div>

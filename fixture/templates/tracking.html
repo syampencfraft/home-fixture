@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -14,7 +14,7 @@
                 <div class="text-end">
                     <span
                         class="badge bg-primary bg-opacity-20 text-primary px-3 py-2 border border-primary border-opacity-20">
-                        {{ tracking.get_status_display }}
+                        {% if booking.status == 'PROCESSING' %}Processing{% else %}{{ tracking.get_status_display }}{% endif %}
                     </span>
                 </div>
             </div>
@@ -84,8 +84,7 @@
                                 <div
                                     class="fw-bold small {% if step.completed %}text-white{% else %}text-muted{% endif %}">
                                     {{ step.label }}</div>
-                                <div class="smaller text-muted">Time: {% if step.completed %}{{
-                                    booking.updated_at|date:"H:i" }}{% else %}Wait{% endif %}</div>
+                                <div class="smaller text-muted">Time: {% if step.completed %}{{ booking.updated_at|date:"H:i" }}{% else %}Wait{% endif %}</div>
                             </div>
                         </div>
                         {% endfor %}

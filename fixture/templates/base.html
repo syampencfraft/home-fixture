@@ -138,6 +138,13 @@
             <div class="collapse navbar-collapse" id="navContent">
                 <div class="ms-auto d-flex align-items-center">
                     {% if user.is_authenticated %}
+                    <a class="nav-link text-light me-3" href="{% url 'dashboard' %}">Dashboard</a>
+                    {% if not user.is_professional %}
+                    <a class="nav-link text-light me-3" href="{% url 'customer_bookings' %}">My Bookings</a>
+                    <a class="nav-link text-light me-3" href="{% url 'update_customer_profile' %}">Location Settings</a>
+                    {% else %}
+                    <a class="nav-link text-light me-3" href="{% url 'professional_bookings' %}">My Bookings</a>
+                    {% endif %}
                     <a href="{% url 'notifications' %}" class="btn btn-link text-light position-relative me-3">
                         <i class="bi bi-bell"></i>
                         <span
@@ -194,9 +201,11 @@
                         </ul>
                     </div>
 
+                    {% if user.is_authenticated and user.role == 'customer' %}
                     <a href="{% url 'search_services' %}" class="btn btn-outline-light btn-sm rounded-pill px-3 ms-3">
                         <i class="bi bi-search me-1"></i> Search
                     </a>
+                    {% endif %}
                     {% else %}
                     <a href="{% url 'login' %}" class="btn btn-link text-light text-decoration-none me-2">Login</a>
                     <a href="{% url 'register' %}" class="btn btn-premium btn-sm rounded-pill px-4">Get Started</a>

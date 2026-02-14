@@ -87,7 +87,12 @@ def logout_view(request):
 @login_required
 def dashboard(request):
     if request.user.is_professional:
-        return render(request, 'pro_dashboard.html')
+        profile = get_object_or_404(ServiceProfessional, user=request.user)
+        recent_bookings = Booking.objects.filter(professional=profile).order_by('-created_at')[:5]
+        return render(request, 'pro_dashboard.html', {
+            'profile': profile,
+            'recent_bookings': recent_bookings
+        })
     else:
         return redirect('home')
     
@@ -313,9 +318,9 @@ def track_job(request, booking_id):
     # Timeline steps based on status
     steps = [
         {'id': 'PENDING', 'label': 'Booking Received', 'completed': True},
-        {'id': 'CONFIRMED', 'label': 'Pro Confirmed', 'completed': booking.status in ['CONFIRMED', 'COMPLETED']},
-        {'id': 'ON_THE_WAY', 'label': 'On the Way', 'completed': tracking.status in ['ON_THE_WAY', 'ARRIVED'] or booking.status == 'COMPLETED'},
-        {'id': 'ARRIVED', 'label': 'Work in Progress', 'completed': tracking.status == 'ARRIVED' or booking.status == 'COMPLETED'},
+        {'id': 'CONFIRMED', 'label': 'Pro Confirmed', 'completed': booking.status in ['CONFIRMED', 'PROCESSING', 'COMPLETED']},
+        {'id': 'ON_THE_WAY', 'label': 'On the Way', 'completed': tracking.status in ['ON_THE_WAY', 'ARRIVED'] or booking.status in ['PROCESSING', 'COMPLETED']},
+        {'id': 'ARRIVED', 'label': 'Work in Progress', 'completed': tracking.status == 'ARRIVED' or booking.status in ['PROCESSING', 'COMPLETED']},
         {'id': 'COMPLETED', 'label': 'Service Finished', 'completed': booking.status == 'COMPLETED'},
     ]
 
@@ -383,11 +388,18 @@ def process_payment(request, booking_id):
     if request.method == 'POST':
         form = PaymentForm(request.POST, instance=payment)
         if form.is_valid():
-            payment = form.save()
-            payment.payment_status = 'SUCCESS'
-            payment.save()
-            messages.success(request, "Payment successful!")
-            return redirect('customer_bookings')
+            try:
+                payment = form.save()
+                payment.payment_status = 'SUCCESS'
+                payment.save()
+                messages.success(request, f"Payment of ₹{payment.amount} processed successfully!")
+                return redirect('job_details', booking_id=booking.id)
+            except Exception as e:
+                payment.payment_status = 'FAILED'
+                payment.save()
+                messages.error(request, f"Payment failed: {str(e)}")
+        else:
+            messages.error(request, "Please correct the errors in the payment form.")
     else:
         form = PaymentForm(instance=payment)
     

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -20,9 +20,7 @@
                         Rating</label>
                     <div class="rating-stars h2">
                         {% for i in "54321" %}
-                        <input type="radio" name="rating" value="{{ i }}" id="rate-{{ i }}" class="d-none" {% if i=="5"
-                            %}checked{% endif %}>
-                        <label for="rate-{{ i }}" class="bi bi-star-fill px-2 cursor-pointer transition-all"></label>
+                        <input type="radio" name="rating" value="{{ i }}" id="rate-{{ i }}" class="d-none" {% if i == "5" %}checked{% endif %}>
                         {% endfor %}
                     </div>
                 </div>
@@ -30,7 +28,7 @@
                 <div class="mb-4 text-start">
                     <label class="form-label small fw-semibold text-muted">Detailed Comment</label>
                     <textarea name="comment"
-                        class="form-control rounded-4 bg-white bg-opacity-5 border-white border-opacity-10 text-white p-3"
+                        class="form-control rounded-4 bg-black bg-opacity-20 border-white border-opacity-10 text-white p-3"
                         rows="4" placeholder="Tell us what you liked (or didn't like)..."></textarea>
                     {% if form.comment.errors %}
                     <div class="text-danger small mt-1">{{ form.comment.errors }}</div>
