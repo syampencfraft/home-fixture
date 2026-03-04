@@ -44,8 +44,8 @@
         <div class="col-md-3">
             <div class="glass-card h-100 p-4">
                 <div class="text-center mb-3">
-                    {% if pro.profile_picture %}
-                    <img src="{{ pro.profile_picture.url }}" class="rounded-circle mb-3" width="80" height="80"
+                    {% if pro.user.profile_picture %}
+                    <img src="{{ pro.user.profile_picture.url }}" class="rounded-circle mb-3" width="80" height="80"
                         style="object-fit: cover; border: 3px solid rgba(168, 85, 247, 0.3);">
                     {% else %}
                     <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white mx-auto mb-3"
@@ -55,13 +55,18 @@
                     {% endif %}
                     <h5 class="fw-bold mb-1">{{ pro.user.full_name|default:pro.user.username }}</h5>
                     <span
-                        class="badge bg-purple bg-opacity-10 text-dark border border-purple border-opacity-20 px-2 py-1 mb-2">
+                        class="badge bg-white bg-opacity-10 text-white border border-white border-opacity-10 px-2 py-1 mb-2">
                         {{ pro.category.name }}
                     </span>
                 </div>
-                <div class="d-flex justify-content-between small text-muted mb-3">
-                    <span><i class="bi bi-star-fill text-warning me-1"></i> {{ pro.safety_score }}</span>
-                    <span>{{ pro.experience_years }} Years Exp</span>
+                <div class="d-flex justify-content-between mb-3 text-white-50">
+                    <div class="smaller">
+                        <i class="bi bi-star-fill text-white"></i> {{ pro.service_score|floatformat:1 }}
+                    </div>
+                    <div class="smaller">
+                        <i class="bi bi-shield-check text-white"></i> {{ pro.safety_score|floatformat:1 }}
+                    </div>
+                    <span class="smaller">{{ pro.experience_years }} Yrs</span>
                 </div>
                 <a href="{% url 'book_professional' pro.id %}"
                     class="btn btn-outline-light btn-sm w-100 rounded-pill">Book Now</a>
@@ -72,22 +77,14 @@
 </div>
 
 <style>
-    .bg-purple {
-        background-color: #a855f7;
-    }
-
-    .text-purple {
-        color: #a855f7;
-    }
-
-    .border-purple {
-        border-color: #a855f7;
+    .hover-translate {
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
 
     .hover-translate:hover {
         transform: translateY(-8px);
-        background: rgba(255, 255, 255, 0.08);
-        border-color: #a855f7;
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.3);
     }
 </style>
 {% endblock %}

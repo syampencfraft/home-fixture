@@ -3,29 +3,62 @@
 {% block content %}
 <div class="container py-5">
     <h2 class="mb-4">Available Professionals for {{ service.name }}</h2>
-    <p class="text-muted mb-5">Book a verified professional for your {{ service.name }} needs. Base price: ${{ service.base_price }}</p>
+    <p class="text-muted mb-5">Book a verified professional for your {{ service.name }} needs. Base price: ${{
+        service.base_price }}</p>
 
-    <div class="row">
+    <div class="row g-4">
         {% for pro in professionals %}
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm border-0">
-                <div class="card-body">
-                    <h5 class="card-title">{{ pro.user.username }}</h5>
-                    <div class="mb-2">
-                        <span class="badge bg-success">Safety Score: {{ pro.safety_score }}</span>
-                        <span class="text-muted small">| {{ pro.experience_years }} yrs Exp</span>
+        <div class="col-md-4 col-lg-3">
+            <div class="glass-card h-100 p-4 transition-all hover-translate">
+                <div class="text-center mb-4">
+                    {% if pro.user.profile_picture %}
+                    <img src="{{ pro.user.profile_picture.url }}" class="rounded-circle mb-3 shadow-sm" width="100"
+                        height="100" style="object-fit: cover; border: 2px solid rgba(255, 255, 255, 0.1);">
+                    {% else %}
+                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white mx-auto mb-3 shadow-sm"
+                        style="width: 100px; height: 100px;">
+                        <i class="bi bi-person fs-1"></i>
                     </div>
-                    <p class="card-text small text-muted">{{ pro.bio|truncatechars:150 }}</p>
-                    <a href="{% url 'book_professional' pro.id %}?service={{ service.id }}"
-                        class="btn btn-primary btn-sm">Book Now</a>
+                    {% endif %}
+                    <h5 class="fw-bold mb-1 text-white">{{ pro.user.full_name|default:pro.user.username }}</h5>
+                    <div class="d-flex align-items-center justify-content-center gap-3 mb-2">
+                        <div class="small">
+                            <i class="bi bi-star-fill text-white"></i> <span class="fw-bold text-white">{{
+                                pro.service_score|floatformat:1
+                                }}</span>
+                        </div>
+                        <div class="small">
+                            <i class="bi bi-shield-check text-white"></i> <span class="fw-bold text-white">{{
+                                pro.safety_score|floatformat:1
+                                }}</span>
+                        </div>
+                    </div>
+                    {% if pro.approved_certs %}
+                    <div class="badge bg-white text-dark shadow-sm rounded-pill px-3 py-2 smaller fw-bold">
+                        <i class="bi bi-patch-check-fill me-1 text-success"></i> Certified
+                    </div>
+                    {% endif %}
                 </div>
+
+                <div class="mb-4">
+                    <p class="small text-muted mb-2 line-clamp-2 text-center">{{ pro.bio|default:"No bio available" }}
+                    </p>
+                    <div class="d-flex justify-content-center align-items-center smaller text-white-50">
+                        <span><i class="bi bi-briefcase me-1"></i> {{ pro.experience_years }} Yrs Exp</span>
+                    </div>
+                </div>
+
+                <a href="{% url 'book_professional' pro.id %}?service={{ service.id }}"
+                    class="btn btn-premium btn-sm w-100 rounded-pill py-2">
+                    Book Service
+                </a>
             </div>
         </div>
         {% empty %}
         <div class="col-12">
-            <p class="text-center py-5">No professionals found for this service yet.</p>
+            <p class="text-center py-5 text-muted">No professionals found for this service yet.</p>
             <div class="text-center">
-                <a href="{% url 'home' %}" class="btn btn-outline-secondary">Back to Home</a>
+                <a href="{% url 'home' %}" class="btn btn-outline-light rounded-pill px-4">Back to Home</a>
             </div>
         </div>
         {% endfor %}

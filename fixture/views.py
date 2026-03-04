@@ -9,9 +9,15 @@ from .forms import (
     BookingForm, PaymentForm, ReviewForm, AdminManagementForm,
     JobUpdateForm
 )
-from .models import Category, ServiceProfessional, Booking, Service, JobTracking, UserProfile, Payment, Review
+from .models import Category, ServiceProfessional, Booking, Service, JobTracking, UserProfile, Payment, Review, Notification, ProfessionalDocuments
+from django.db import models
 
 from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+import google.generativeai as genai
+import json
 
 
 def index(request):
@@ -38,12 +44,22 @@ def home(request):
 
 def category_professionals(request, category_id):
     category = get_object_or_404(Category, id=category_id)
-    professionals = ServiceProfessional.objects.filter(category=category)
+    approved_certs_prefetch = models.Prefetch(
+        'documents',
+        queryset=ProfessionalDocuments.objects.filter(document_type='CERTIFICATE', verification_status='APPROVED'),
+        to_attr='approved_certs'
+    )
+    professionals = ServiceProfessional.objects.filter(category=category).prefetch_related(approved_certs_prefetch)
     return render(request, 'category_pros.html', {'category': category, 'professionals': professionals})
 
 def service_professionals(request, service_id):
     service = get_object_or_404(Service, id=service_id)
-    professionals = ServiceProfessional.objects.filter(category=service.category)
+    approved_certs_prefetch = models.Prefetch(
+        'documents',
+        queryset=ProfessionalDocuments.objects.filter(document_type='CERTIFICATE', verification_status='APPROVED'),
+        to_attr='approved_certs'
+    )
+    professionals = ServiceProfessional.objects.filter(category=service.category).prefetch_related(approved_certs_prefetch)
     return render(request, 'service_pros.html', {'service': service, 'professionals': professionals})
 
 def register_view(request):
@@ -137,6 +153,20 @@ def update_professional_profile(request):
                 request.user.profile_picture = form.cleaned_data['profile_picture']
                 request.user.save()
             form.save()
+            
+            # Handle certification document upload from profile page
+            cert_doc = form.cleaned_data.get('certification_document')
+            if cert_doc:
+                ProfessionalDocuments.objects.create(
+                    professional=profile,
+                    document_type='CERTIFICATE',
+                    document_file=cert_doc,
+                    verification_status='APPROVED' # Auto-approving for demo
+                )
+                Notification.objects.create(
+                    user=request.user,
+                    message="New skill certification added to your profile."
+                )
             messages.success(request, "Your professional profile has been updated!")
             return redirect('profile_view')
     else:
@@ -151,6 +181,7 @@ def book_professional(request, pro_id):
         return redirect('home')
 
     professional = get_object_or_404(ServiceProfessional, id=pro_id)
+    approved_certificates = professional.documents.filter(document_type='CERTIFICATE', verification_status='APPROVED')
     
     if request.method == 'POST':
         form = BookingForm(request.POST)
@@ -159,6 +190,10 @@ def book_professional(request, pro_id):
             booking.customer = request.user
             booking.professional = professional
             booking.save()
+            Notification.objects.create(
+                user=professional.user,
+                message=f"New booking request from {request.user.username} for {booking.service.name}"
+            )
             messages.success(request, f"Booking request for {booking.service.name} sent!")
             return redirect('customer_bookings')
     else:
@@ -173,7 +208,8 @@ def book_professional(request, pro_id):
 
     return render(request, 'book_service.html', {
         'pro': professional,
-        'form': form
+        'form': form,
+        'certificates': approved_certificates
     })
 
 @login_required
@@ -205,9 +241,13 @@ def update_booking_status(request, booking_id, status):
     if status_upper in dict(Booking.STATUS_CHOICES):
         booking.status = status_upper
         booking.save()
+        Notification.objects.create(
+            user=booking.customer,
+            message=f"Your booking for {booking.service.name} has been {status_upper.lower()}."
+        )
         messages.success(request, f"Booking status updated to {status.capitalize()}.")
         
-        # Auto-generate invoice if completed
+        # Auto-generate invoice and update stats if completed
         if status_upper == 'COMPLETED':
             from .models import Invoice
             import uuid
@@ -218,7 +258,21 @@ def update_booking_status(request, booking_id, status):
                     'total_amount': booking.service.base_price if booking.service else 0
                 }
             )
-            messages.success(request, "Invoice generated.")
+            
+            # Update Professional Stats
+            pro = booking.professional
+            completed_bookings = Booking.objects.filter(professional=pro, status='COMPLETED')
+            pro.total_jobs = completed_bookings.count()
+            
+            # Calculate Rehire Rate (customers who booked more than once)
+            customer_stats = completed_bookings.values('customer').annotate(count=models.Count('id'))
+            total_unique_cust = customer_stats.count()
+            if total_unique_cust > 0:
+                rehire_cust_count = customer_stats.filter(count__gt=1).count()
+                pro.rehire_percentage = round((rehire_cust_count / total_unique_cust) * 100, 1)
+            
+            pro.save()
+            messages.success(request, "Job completed and statistics updated.")
     else:
         messages.error(request, "Invalid status update.")
         
@@ -240,6 +294,10 @@ def upload_documents(request):
                 professional=profile,
                 document_type=doc_type,
                 document_file=doc_file
+            )
+            Notification.objects.create(
+                user=request.user,
+                message=f"Your {doc_type} document has been uploaded successfully and is pending verification."
             )
             messages.success(request, "Document uploaded for verification.")
             return redirect('upload_documents')
@@ -274,6 +332,25 @@ def submit_review(request, booking_id):
             review = form.save(commit=False)
             review.booking = booking
             review.save()
+            
+            # Update Professional's average scores
+            professional = booking.professional
+            all_reviews = Review.objects.filter(booking__professional=professional)
+            
+            avg_safety = all_reviews.aggregate(models.Avg('safety_score'))['safety_score__avg']
+            if avg_safety:
+                professional.safety_score = round(avg_safety, 1)
+            
+            avg_service = all_reviews.aggregate(models.Avg('rating'))['rating__avg']
+            if avg_service:
+                professional.service_score = round(avg_service, 1)
+                
+            professional.save()
+
+            Notification.objects.create(
+                user=booking.professional.user,
+                message=f"New {review.rating}-star review (Safety Rating: {review.safety_score}) from {booking.customer.username}."
+            )
             messages.success(request, "Thank you for your feedback!")
             return redirect('customer_bookings')
     else:
@@ -392,6 +469,10 @@ def process_payment(request, booking_id):
                 payment = form.save()
                 payment.payment_status = 'SUCCESS'
                 payment.save()
+                Notification.objects.create(
+                    user=booking.professional.user,
+                    message=f"Payment of ₹{payment.amount} received from {booking.customer.username} for booking #{booking.id}."
+                )
                 messages.success(request, f"Payment of ₹{payment.amount} processed successfully!")
                 return redirect('job_details', booking_id=booking.id)
             except Exception as e:
@@ -431,6 +512,10 @@ def update_job(request, booking_id):
         form = JobUpdateForm(request.POST, instance=booking)
         if form.is_valid():
             booking = form.save()
+            Notification.objects.create(
+                user=booking.customer,
+                message=f"Your job #{booking.id} has been updated to {booking.status.lower()}."
+            )
             # If status changed to completed, ensure invoice exists
             if booking.status == 'COMPLETED':
                 from .models import Invoice
@@ -460,3 +545,42 @@ def update_job(request, booking_id):
 @login_required
 def profile_view(request):
     return render(request, 'profile.html')
+
+@csrf_exempt
+@login_required
+def chatbot_response(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user_message = data.get('message', '')
+
+            if not user_message:
+                return JsonResponse({'error': 'No message provided'}, status=400)
+
+            # Ensure API Key is set
+            api_key = getattr(settings, 'GOOGLE_API_KEY', None)
+            if not api_key:
+                return JsonResponse({'error': 'Gemini API Key not configured'}, status=500)
+
+            genai.configure(api_key=api_key)
+            model = genai.GenerativeModel('gemini-flash-latest')
+            
+            # System prompt to focus on home repairs
+            prompt = f"""
+            You are a helpful home repair assistant for the HomeFixr platform.
+            Your goal is to help users with their home fixture doubts (e.g., how to fix a fuse, how to repair a fan, etc.).
+            Always provide proper step-by-step answers.
+            If the user asks something unrelated to home repair, politely redirect them to ask about home fixtures.
+            
+            User Question: {user_message}
+            """
+
+            response = model.generate_content(prompt)
+            
+            return JsonResponse({'response': response.text})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+    
+    return JsonResponse({'error': 'Invalid request method'}, status=405)

@@ -12,11 +12,12 @@
                 {% csrf_token %}
 
                 {% for field in form %}
-                <div class="mb-3">
+                <div class="mb-3 {% if field.name == 'certification_document' %}d-none{% endif %}"
+                    id="field-{{ field.name }}">
                     <label class="form-label small fw-semibold text-muted">{{ field.label }}</label>
                     {{ field }}
                     {% if field.help_text %}
-                    <div class="form-text small text-info">{{ field.help_text }}</div>
+                    <div class="form-text small text-white-50">{{ field.help_text }}</div>
                     {% endif %}
                     {% for error in field.errors %}
                     <div class="text-danger small mt-1">{{ error }}</div>
@@ -25,19 +26,66 @@
                 {% endfor %}
 
                 <div class="d-grid mt-4">
-                    <button type="submit" class="btn btn-premium">Create Account</button>
+                    <button type="submit" class="btn btn-premium py-3">Create Account</button>
                 </div>
             </form>
 
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const roleRadios = document.querySelectorAll('input[name="role"]');
+                    const certField = document.getElementById('field-certification_document');
+
+                    function toggleCertField() {
+                        const selectedRole = document.querySelector('input[name="role"]:checked');
+                        if (selectedRole && selectedRole.value === 'professional') {
+                            certField.classList.remove('d-none');
+                        } else {
+                            certField.classList.add('d-none');
+                        }
+                    }
+
+                    roleRadios.forEach(radio => {
+                        radio.addEventListener('change', toggleCertField);
+                    });
+
+                    // Initial check
+                    toggleCertField();
+                });
+            </script>
+
             <div class="mt-4 text-center">
                 <p class="small text-muted">Already have an account? <a href="{% url 'login' %}"
-                        class="text-info text-decoration-none">Login here</a></p>
+                        class="text-white text-decoration-none fw-bold">Login here</a></p>
             </div>
         </div>
     </div>
 </div>
 
 <style>
+    input:not([type="radio"]):not([type="checkbox"]),
+    select,
+    textarea {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1.25rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #fff;
+        background-color: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.3);
+        outline: none;
+    }
+
     /* Styling for Radio buttons in role selection */
     ul#id_role {
         list-style: none;
@@ -58,18 +106,20 @@
         display: block;
         padding: 1rem;
         background: rgba(255, 255, 255, 0.05);
-        border: 1px solid var(--glass-border);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 12px;
         text-align: center;
         cursor: pointer;
         transition: all 0.3s ease;
+        color: rgba(255, 255, 255, 0.6);
     }
 
     ul#id_role input[type="radio"]:checked+label {
-        background: var(--primary-gradient);
-        border-color: transparent;
-        color: white;
+        background: #ffffff;
+        border-color: #ffffff;
+        color: #000000;
         font-weight: 600;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
     }
 </style>
 {% endblock %}

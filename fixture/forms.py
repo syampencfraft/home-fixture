@@ -15,10 +15,16 @@ class RegistrationForm(UserCreationForm):
     )
     terms_accepted = forms.BooleanField(required=True, label="Terms & Conditions", help_text="Accept policy")
     profile_picture = forms.ImageField(required=False, label="Profile Picture", widget=forms.FileInput(attrs={'class': 'form-control'}))
+    certification_document = forms.FileField(
+        required=False,
+        label="Skill Certification (PDF/Image)",
+        help_text="Upload your professional certificate (optional during registration)",
+        widget=forms.FileInput(attrs={'class': 'form-control'})
+    )
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = UserCreationForm.Meta.fields + ('email', 'phone_number', 'full_name', 'role', 'terms_accepted', 'profile_picture')
+        fields = UserCreationForm.Meta.fields + ('email', 'phone_number', 'full_name', 'role', 'terms_accepted', 'profile_picture', 'certification_document')
 
     def clean_phone_number(self):
         phone = self.cleaned_data.get('phone_number')
@@ -41,7 +47,17 @@ class RegistrationForm(UserCreationForm):
             # Create UserProfile or ServiceProfessional profile automatically
             UserProfile.objects.get_or_create(user=user, full_name=self.cleaned_data.get('full_name'))
             if user.is_professional:
-                ServiceProfessional.objects.get_or_create(user=user)
+                pro_profile, created = ServiceProfessional.objects.get_or_create(user=user)
+                # Handle certification document
+                cert_doc = self.cleaned_data.get('certification_document')
+                if cert_doc:
+                    from .models import ProfessionalDocuments
+                    ProfessionalDocuments.objects.create(
+                        professional=pro_profile,
+                        document_type='CERTIFICATE',
+                        document_file=cert_doc,
+                        verification_status='APPROVED'
+                    )
         return user
 
 class LoginForm(AuthenticationForm):
@@ -70,6 +86,12 @@ class CustomerProfileForm(forms.ModelForm):
 
 class ServiceProfessionalProfileForm(forms.ModelForm):
     profile_picture = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class': 'form-control'}))
+    certification_document = forms.FileField(
+        required=False,
+        label="New Skill Certification (PDF/Image)",
+        help_text="Upload a new certificate to add to your profile",
+        widget=forms.FileInput(attrs={'class': 'form-control'})
+    )
 
     class Meta:
         model = ServiceProfessional
@@ -137,9 +159,10 @@ class PaymentForm(forms.ModelForm):
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ['rating', 'comment']
+        fields = ['rating', 'safety_score', 'comment']
         widgets = {
             'rating': forms.Select(attrs={'class': 'form-control'}),
+            'safety_score': forms.Select(attrs={'class': 'form-control'}),
             'comment': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'maxlength': 300}),
         }
 

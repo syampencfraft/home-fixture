@@ -17,27 +17,26 @@
     <!-- Profile Overview Card -->
     <div class="col-md-6 col-lg-4">
         <div class="glass-card h-100 p-4">
-            <h5 class="fw-bold mb-4 text-info">
+            <h5 class="fw-bold mb-4 text-white">
                 <i class="bi bi-person-circle me-2"></i>Your Profile
             </h5>
             {% if profile %}
-            <div class="mb-3">
-                <div class="smaller text-muted mb-1">Category</div>
-                <div class="fw-bold">{{ profile.category.name|default:"Not Set" }}</div>
+            <div class="mb-4 p-3 rounded-4 bg-white shadow-sm">
+                <div class="smaller text-dark opacity-50 mb-1 fw-bold text-uppercase letter-spacing-1">Category</div>
+                <div class="fw-bold text-dark">{{ profile.category.name|default:"Not Set" }}</div>
             </div>
-            <div class="mb-3">
-                <div class="smaller text-muted mb-1">Experience</div>
-                <div class="fw-bold">{{ profile.experience_years }} Years</div>
+            <div class="mb-4 p-3 rounded-4 bg-white shadow-sm">
+                <div class="smaller text-dark opacity-50 mb-1 fw-bold text-uppercase letter-spacing-1">Experience</div>
+                <div class="fw-bold text-dark">{{ profile.experience_years }} Years</div>
             </div>
-            <div>
-                <div class="smaller text-muted mb-1">Status</div>
-                <span
-                    class="badge {% if profile.is_verified %}bg-success{% else %}bg-warning text-dark{% endif %} bg-opacity-20 text-{% if profile.is_verified %}success{% else %}warning{% endif %} border border-white border-opacity-10">
-                    {% if profile.is_verified %}Verified{% else %}Pending Verification{% endif %}
+            <div class="p-3 rounded-4 bg-white shadow-sm d-flex justify-content-between align-items-center">
+                <div class="smaller text-dark opacity-50 fw-bold text-uppercase letter-spacing-1">Status</div>
+                <span class="badge bg-black text-white px-3 py-2 rounded-pill smaller text-uppercase letter-spacing-1">
+                    {% if profile.is_verified %}Verified{% else %}Pending{% endif %}
                 </span>
             </div>
             {% else %}
-            <div class="alert alert-warning bg-transparent border-warning border-opacity-20 text-warning small">
+            <div class="alert alert-dark bg-black bg-opacity-40 border-white border-opacity-10 text-white small">
                 Please complete your professional profile setup.
             </div>
             {% endif %}
@@ -49,18 +48,27 @@
     <!-- Stats Card -->
     <div class="col-md-6 col-lg-4">
         <div class="glass-card h-100 p-4 text-center">
-            <h5 class="fw-bold mb-4 text-success">
-                <i class="bi bi-shield-check me-2"></i>Safety Score
+            <h5 class="fw-bold mb-4">
+                <i class="bi bi-graph-up-arrow me-2 text-white"></i>Performance Summary
             </h5>
-            <div class="display-3 fw-bold text-gradient mb-2">{{ profile.safety_score|default:"0.0" }}</div>
-            <p class="text-muted small">Based on reviews and performance</p>
-            <div class="mt-4 pt-3 border-top border-white border-opacity-10 d-flex justify-content-around">
+            <div class="row g-2 mb-4">
+                <div class="col-6 border-end border-white border-opacity-10">
+                    <div class="h2 fw-bold text-white mb-0">{{ profile.service_score|floatformat:1 }}</div>
+                    <div class="smaller text-muted text-uppercase fw-bold">Service</div>
+                </div>
+                <div class="col-6">
+                    <div class="h2 fw-bold text-white mb-0">{{ profile.safety_score|floatformat:1 }}</div>
+                    <div class="smaller text-muted text-uppercase fw-bold">Safety</div>
+                </div>
+            </div>
+            <p class="text-muted smaller mb-4 italic">Based on your recent customer reviews</p>
+            <div class="pt-3 border-top border-white border-opacity-5 d-flex justify-content-around">
                 <div>
-                    <div class="fw-bold">{{ profile.total_jobs|default:"0" }}</div>
+                    <div class="h4 fw-bold mb-0 text-white">{{ profile.total_jobs }}</div>
                     <div class="smaller text-muted">Total Jobs</div>
                 </div>
                 <div>
-                    <div class="fw-bold">{{ profile.rehire_percentage|default:"0" }}%</div>
+                    <div class="h4 fw-bold mb-0 text-white">{{ profile.rehire_percentage }}%</div>
                     <div class="smaller text-muted">Rehire Rate</div>
                 </div>
             </div>
@@ -71,9 +79,8 @@
 <!-- Recent Requests Section -->
 <div class="glass-card p-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="fw-bold m-0"><i class="bi bi-bell-fill me-2 text-warning"></i> Recent <span
-                class="text-gradient">Requests</span></h4>
-        <a href="{% url 'professional_bookings' %}" class="btn btn-link btn-sm text-info text-decoration-none">View
+        <h4 class="fw-bold m-0"><i class="bi bi-bell-fill me-2 text-white"></i> Recent Requests</h4>
+        <a href="{% url 'professional_bookings' %}" class="btn btn-link btn-sm text-white text-decoration-none">View
             All</a>
     </div>
 
@@ -92,13 +99,13 @@
             <tbody>
                 {% for booking in recent_bookings %}
                 <tr>
-                    <td class="fw-bold">#{{ booking.id }}</td>
-                    <td>{{ booking.customer.username }}</td>
-                    <td>{{ booking.service.name }}</td>
-                    <td>{{ booking.booking_date|date:"M j, Y" }}</td>
+                    <td class="fw-bold text-white">#{{ booking.id }}</td>
+                    <td class="text-white">{{ booking.customer.username }}</td>
+                    <td class="text-white">{{ booking.service.name }}</td>
+                    <td class="text-white">{{ booking.booking_date|date:"M j, Y" }}</td>
                     <td>
                         <span
-                            class="badge {% if booking.status == 'PENDING' %}bg-warning text-dark{% elif booking.status == 'CONFIRMED' %}bg-info{% elif booking.status == 'PROCESSING' %}bg-info text-dark{% elif booking.status == 'COMPLETED' %}bg-success{% else %}bg-danger{% endif %} bg-opacity-10 text-{% if booking.status == 'PENDING' %}warning{% elif booking.status == 'CONFIRMED' %}info{% elif booking.status == 'PROCESSING' %}dark{% elif booking.status == 'COMPLETED' %}success{% else %}danger{% endif %} border border-white border-opacity-5">
+                            class="badge bg-white text-dark px-3 py-2 rounded-pill fw-bold smaller border border-dark border-opacity-10">
                             {{ booking.status }}
                         </span>
                     </td>

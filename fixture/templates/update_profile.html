@@ -16,22 +16,37 @@
                     <label class="form-label small fw-semibold text-muted d-flex justify-content-between">
                         {{ field.label }}
                         {% if field.field.required %}
-                        <span class="badge bg-info bg-opacity-10 text-info smaller px-2 py-1">Required</span>
+                        <span
+                            class="badge bg-black bg-opacity-40 text-white border border-white border-opacity-10 smaller px-2 py-1">Required</span>
                         {% endif %}
                     </label>
 
                     {% if field.name == 'category' %}
                     <div class="input-group">
                         <span
-                            class="input-group-text bg-white bg-opacity-5 border-white border-opacity-10 text-muted"><i
+                            class="input-group-text bg-black bg-opacity-40 border-white border-opacity-10 text-white"><i
                                 class="bi bi-tag"></i></span>
                         {{ field }}
                     </div>
                     {% elif field.name == 'experience_years' %}
                     <div class="input-group">
                         <span
-                            class="input-group-text bg-white bg-opacity-5 border-white border-opacity-10 text-muted"><i
+                            class="input-group-text bg-black bg-opacity-40 border-white border-opacity-10 text-white"><i
                                 class="bi bi-briefcase"></i></span>
+                        {{ field }}
+                    </div>
+                    {% elif field.name == 'profile_picture' %}
+                    <div class="input-group">
+                        <span
+                            class="input-group-text bg-white bg-opacity-5 border-white border-opacity-10 text-muted"><i
+                                class="bi bi-image"></i></span>
+                        {{ field }}
+                    </div>
+                    {% elif field.name == 'certification_document' %}
+                    <div class="input-group">
+                        <span
+                            class="input-group-text bg-white bg-opacity-5 border-white border-opacity-10 text-muted"><i
+                                class="bi bi-file-earmark-pdf"></i></span>
                         {{ field }}
                     </div>
                     {% else %}
@@ -55,10 +70,50 @@
                     <button type="submit" class="btn btn-premium py-3">
                         <i class="bi bi-check-circle me-2"></i> Save Changes
                     </button>
-                    <a href="{% url 'profile_view' %}" class="btn btn-link text-muted mt-3">Cancel and go back</a>
+                    <a href="{% url 'profile_view' %}"
+                        class="btn btn-link text-white-50 text-decoration-none small mt-3">Cancel and go back</a>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<style>
+    input:not([type="radio"]):not([type="checkbox"]),
+    select,
+    textarea {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1.25rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #fff;
+        background-color: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.3);
+        outline: none;
+    }
+
+    .input-group-text {
+        border-radius: 12px 0 0 12px !important;
+    }
+
+    .input-group input,
+    .input-group select {
+        border-radius: 0 12px 12px 0 !important;
+    }
+
+    .letter-spacing-1 {
+        letter-spacing: 1px;
+    }
+</style>
 {% endblock %}

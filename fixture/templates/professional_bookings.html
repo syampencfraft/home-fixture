@@ -20,36 +20,38 @@
     <div class="col-md-6 col-lg-4">
         <div class="glass-card h-100 p-4 transition-all hover-translate">
             <div class="d-flex justify-content-between align-items-start mb-4">
-                <div class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-20 px-3 py-1">
+                <div
+                    class="badge bg-white bg-opacity-10 text-white border border-white border-opacity-10 px-3 py-1 smaller text-uppercase letter-spacing-1">
                     Job #{{ booking.id }}
                 </div>
                 <div class="small text-muted"><i class="bi bi-clock me-1"></i> {{ booking.time_slot }}</div>
             </div>
 
             <div class="d-flex justify-content-between align-items-center mb-1">
-                <h4 class="fw-bold m-0">{{ booking.service.name }}</h4>
-                <div class="fw-bold text-success">&#8377;{{ booking.service.base_price }}</div>
+                <h4 class="fw-bold m-0 text-white">{{ booking.service.name }}</h4>
+                <div class="fw-bold text-white">&#8377;{{ booking.service.base_price }}</div>
             </div>
-            <div class="d-flex align-items-center text-info small mb-4">
+            <div class="d-flex align-items-center text-muted small mb-4">
                 <i class="bi bi-person me-1"></i> {{ booking.customer.full_name|default:booking.customer.username }}
                 <span class="mx-2 opacity-50">|</span>
                 <i class="bi bi-telephone me-1"></i> {{ booking.customer.phone_number }}
             </div>
 
-            <div class="p-3 rounded bg-black bg-opacity-20 mb-4 border border-white border-opacity-5">
-                <div class="d-flex justify-content-between mb-2">
-                    <span class="smaller text-muted">Date</span>
-                    <span class="small fw-medium">{{ booking.booking_date|date:"F j, Y" }}</span>
+            <div class="p-4 rounded-4 bg-white mb-4 shadow-sm">
+                <div class="d-flex justify-content-between mb-3 border-bottom border-dark border-opacity-5 pb-2">
+                    <span class="small fw-bold text-dark opacity-50 text-uppercase letter-spacing-1">Date</span>
+                    <span class="small fw-bold text-dark">{{ booking.booking_date|date:"F j, Y" }}</span>
                 </div>
-                <div class="d-flex justify-content-between mb-2">
-                    <span class="smaller text-muted">Location</span>
-                    <span class="small text-truncate text-end overflow-hidden ms-2" style="max-width: 150px;">
+                <div class="d-flex justify-content-between mb-3 border-bottom border-dark border-opacity-5 pb-2">
+                    <span class="small fw-bold text-dark opacity-50 text-uppercase letter-spacing-1">Location</span>
+                    <span class="small text-truncate text-end overflow-hidden ms-2 text-dark fw-medium"
+                        style="max-width: 150px;">
                         {{ booking.service_address }}</span>
                 </div>
-                <div class="d-flex justify-content-between">
-                    <span class="smaller text-muted">Status</span>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="small fw-bold text-dark opacity-50 text-uppercase letter-spacing-1">Status</span>
                     <span
-                        class="badge {% if booking.status == 'PENDING' %}bg-warning text-dark{% elif booking.status == 'CONFIRMED' %}bg-info{% elif booking.status == 'COMPLETED' %}bg-success{% else %}bg-danger{% endif %} smaller">
+                        class="badge bg-black text-white px-3 py-2 rounded-pill smaller text-uppercase letter-spacing-1">
                         {{ booking.status }}
                     </span>
                 </div>
@@ -63,21 +65,21 @@
                 <div class="row g-2">
                     <div class="col-6">
                         <a href="{% url 'update_booking_status' booking.id 'CONFIRMED' %}"
-                            class="btn btn-success btn-sm w-100 rounded-pill py-2">Accept</a>
+                            class="btn btn-premium btn-sm w-100 rounded-pill py-2">Accept</a>
                     </div>
                     <div class="col-6">
                         <a href="{% url 'update_booking_status' booking.id 'CANCELLED' %}"
-                            class="btn btn-outline-danger btn-sm w-100 rounded-pill py-2">Decline</a>
+                            class="btn btn-outline-light btn-sm w-100 rounded-pill py-2">Decline</a>
                     </div>
                 </div>
                 {% elif booking.status == 'CONFIRMED' %}
                 <a href="{% url 'update_booking_status' booking.id 'PROCESSING' %}"
-                    class="btn btn-premium btn-sm w-100 rounded-pill py-2 mb-2">Start Processing</a>
+                    class="btn btn-premium btn-sm w-100 rounded-pill py-2 mb-1">Start Processing</a>
                 <a href="{% url 'update_job' booking.id %}"
                     class="btn btn-outline-light btn-sm w-100 rounded-pill py-2">Update Notes</a>
                 {% elif booking.status == 'PROCESSING' %}
                 <a href="{% url 'update_booking_status' booking.id 'COMPLETED' %}"
-                    class="btn btn-success btn-sm w-100 rounded-pill py-2 mb-2">Complete Job</a>
+                    class="btn btn-premium btn-sm w-100 rounded-pill py-2 mb-1">Complete Job</a>
                 <a href="{% url 'update_job' booking.id %}"
                     class="btn btn-outline-light btn-sm w-100 rounded-pill py-2">Update Notes</a>
                 {% endif %}

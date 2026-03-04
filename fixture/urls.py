@@ -33,5 +33,6 @@ urlpatterns = [
     path('job/update/<int:booking_id>/', views.update_job, name='update_job'),
     path('profile/', views.profile_view, name='profile_view'),
     path('admin/management/', views.admin_management, name='admin_management'),
+    path('chatbot/', views.chatbot_response, name='chatbot_response'),
 ]
 

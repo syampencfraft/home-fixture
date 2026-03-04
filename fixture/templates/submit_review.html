@@ -5,8 +5,8 @@
     <div class="col-md-8 col-lg-6">
         <div class="glass-card p-5 text-center">
             <div
-                class="bg-warning bg-opacity-10 p-4 rounded-circle d-inline-block mb-4 border border-warning border-opacity-10">
-                <i class="bi bi-stars text-warning fs-1"></i>
+                class="bg-white bg-opacity-5 p-4 rounded-circle d-inline-block mb-4 border border-white border-opacity-10">
+                <i class="bi bi-stars text-white fs-1"></i>
             </div>
 
             <h2 class="fw-bold mb-2">Service <span class="text-gradient">Feedback</span></h2>
@@ -16,19 +16,37 @@
                 {% csrf_token %}
 
                 <div class="mb-5">
-                    <label class="form-label small fw-bold text-muted text-uppercase mb-4 d-block">Overall
-                        Rating</label>
+                    <label
+                        class="form-label small fw-bold text-white-50 text-uppercase mb-3 d-block letter-spacing-1">Overall
+                        Performance</label>
                     <div class="rating-stars h2">
                         {% for i in "54321" %}
-                        <input type="radio" name="rating" value="{{ i }}" id="rate-{{ i }}" class="d-none" {% if i == "5" %}checked{% endif %}>
+                        <input type="radio" name="rating" value="{{ i }}" id="rate-{{ i }}" class="d-none" {% if i=="5"
+                            %}checked{% endif %}>
+                        <label for="rate-{{ i }}" class="px-2"><i class="bi bi-star-fill"></i></label>
                         {% endfor %}
                     </div>
                 </div>
 
+                <div class="mb-5 bg-black bg-opacity-40 p-4 rounded-4 border border-white border-opacity-10">
+                    <label
+                        class="form-label small fw-bold text-white text-uppercase mb-3 d-block letter-spacing-1">Safety
+                        & Trust
+                        Rating</label>
+                    <div class="safety-stars h3">
+                        {% for i in "54321" %}
+                        <input type="radio" name="safety_score" value="{{ i }}" id="safety-{{ i }}" class="d-none" {% if
+                            i=="5" %}checked{% endif %}>
+                        <label for="safety-{{ i }}" class="px-2"><i class="bi bi-shield-fill-check"></i></label>
+                        {% endfor %}
+                    </div>
+                    <p class="smaller text-white-50 mt-2 mb-0">How safe did you feel during the service?</p>
+                </div>
+
                 <div class="mb-4 text-start">
-                    <label class="form-label small fw-semibold text-muted">Detailed Comment</label>
+                    <label class="form-label small fw-semibold text-white-50">Detailed Comment</label>
                     <textarea name="comment"
-                        class="form-control rounded-4 bg-black bg-opacity-20 border-white border-opacity-10 text-white p-3"
+                        class="form-control rounded-4 bg-black bg-opacity-40 border-white border-opacity-10 text-white p-3"
                         rows="4" placeholder="Tell us what you liked (or didn't like)..."></textarea>
                     {% if form.comment.errors %}
                     <div class="text-danger small mt-1">{{ form.comment.errors }}</div>
@@ -39,7 +57,8 @@
                     <button type="submit" class="btn btn-premium py-3 rounded-pill fw-bold">
                         Submit Review
                     </button>
-                    <a href="{% url 'job_details' booking.id %}" class="btn btn-link text-muted">Skip for now</a>
+                    <a href="{% url 'job_details' booking.id %}"
+                        class="btn btn-link text-white-50 text-decoration-none small">Skip for now</a>
                 </div>
             </form>
         </div>
@@ -47,27 +66,43 @@
 </div>
 
 <style>
-    .rating-stars {
+    .rating-stars,
+    .safety-stars {
         display: flex;
         flex-direction: row-reverse;
         justify-content: center;
     }
 
-    .rating-stars label {
-        color: rgba(255, 255, 255, 0.1);
+    .rating-stars label,
+    .safety-stars label {
+        color: rgba(255, 255, 255, 0.05);
         cursor: pointer;
-        transition: all 0.2s;
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
 
     .rating-stars input:checked~label,
     .rating-stars label:hover,
     .rating-stars label:hover~label {
-        color: #fbbf24;
-        transform: scale(1.15);
+        color: #ffffff;
+        transform: scale(1.1);
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
     }
 
-    .cursor-pointer {
-        cursor: pointer;
+    .safety-stars input:checked~label,
+    .safety-stars label:hover,
+    .safety-stars label:hover~label {
+        color: #ffffff;
+        transform: scale(1.1);
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
     }
+
+    .letter-spacing-1 {
+        letter-spacing: 1px;
+    }
+</style>
+
+.cursor-pointer {
+cursor: pointer;
+}
 </style>
 {% endblock %}

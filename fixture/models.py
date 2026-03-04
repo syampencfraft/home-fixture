@@ -63,7 +63,8 @@ class ServiceProfessional(models.Model):
     bio = models.TextField(blank=True)
     experience_years = models.IntegerField(default=0)
     availability_status = models.BooleanField(default=True)
-    safety_score = models.FloatField(default=0.0)
+    safety_score = models.FloatField(default=5.0)
+    service_score = models.FloatField(default=5.0)
     total_jobs = models.IntegerField(default=0)
     rehire_percentage = models.FloatField(default=0.0)
     is_verified = models.BooleanField(default=False)
@@ -124,7 +125,8 @@ class JobTracking(models.Model):
 
 class Payment(models.Model):
     METHOD_CHOICES = [
-        ('UPI', 'UPI'),
+        ('CASH', 'Cash'),
+        ('GPAY', 'G Pay'),
         ('CARD', 'Card'),
         ('WALLET', 'Wallet'),
     ]
@@ -148,6 +150,7 @@ class Invoice(models.Model):
 class Review(models.Model):
     booking = models.OneToOneField(Booking, on_delete=models.CASCADE, related_name='review')
     rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
+    safety_score = models.IntegerField(choices=[(i, i) for i in range(1, 6)], default=5)
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 

@@ -4,62 +4,72 @@
 <div class="row justify-content-center">
     <div class="col-lg-8">
         <!-- Job Card Header -->
+        <!-- Job Card Header -->
         <div class="glass-card p-4 mb-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <h2 class="fw-bold m-0 text-gradient">Job #{{ booking.id }}</h2>
+                    <h2 class="fw-bold m-0 text-white">Job #{{ booking.id }}</h2>
                     <p class="text-muted small m-0">{{ booking.service.name }}</p>
                 </div>
                 <span
-                    class="badge {% if booking.status == 'COMPLETED' %}bg-success{% elif booking.status == 'CANCELLED' %}bg-danger{% elif booking.status == 'PROCESSING' %}bg-info text-dark{% else %}bg-info{% endif %} bg-opacity-20 text-{% if booking.status == 'COMPLETED' %}success{% elif booking.status == 'CANCELLED' %}danger{% elif booking.status == 'PROCESSING' %}dark{% else %}info{% endif %} px-3 py-2 border border-white border-opacity-10">
+                    class="badge bg-black text-white px-3 py-2 rounded-pill border border-white border-opacity-20 text-uppercase letter-spacing-1 smaller">
                     {{ booking.status }}
                 </span>
             </div>
 
             <div class="row g-4">
                 <div class="col-md-6">
-                    <div class="p-3 rounded bg-black bg-opacity-20 border border-white border-opacity-10">
-                        <div class="small text-muted mb-2">Customer Details</div>
-                        <h5 class="fw-bold mb-1">{{ booking.customer.username }}</h5>
-                        <p class="small text-muted mb-0"><i class="bi bi-geo-alt me-1"></i>
+                    <div class="p-4 rounded-4 bg-white shadow-sm border border-white border-opacity-10">
+                        <div class="small fw-bold text-dark opacity-50 mb-2 text-uppercase letter-spacing-1">Customer
+                            Details</div>
+                        <h5 class="fw-bold mb-1 text-dark">{{ booking.customer.username }}</h5>
+                        <p class="small text-dark opacity-75 mb-0"><i class="bi bi-geo-alt me-1"></i>
                             {{ booking.service_address }}</p>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="p-3 rounded bg-black bg-opacity-20 border border-white border-opacity-10">
-                        <div class="small text-muted mb-2">Professional Details</div>
-                        <h5 class="fw-bold mb-1">{{ booking.professional.user.username }}</h5>
-                        <p class="small text-muted mb-0"><i class="bi bi-star-fill text-warning me-1"></i>
-                            {{ booking.professional.safety_score }}</p>
+                    <div class="p-4 rounded-4 bg-white shadow-sm border border-white border-opacity-10">
+                        <div class="small fw-bold text-dark opacity-50 mb-2 text-uppercase letter-spacing-1">
+                            Professional Details</div>
+                        <h5 class="fw-bold mb-1 text-dark">{{ booking.professional.user.username }}</h5>
+                        <div class="d-flex align-items-center gap-3 smaller text-dark opacity-75 mb-0">
+                            <span><i class="bi bi-star-fill text-warning me-1"></i> {{
+                                booking.professional.service_score|floatformat:1 }}</span>
+                            <span><i class="bi bi-shield-check text-success me-1"></i> {{
+                                booking.professional.safety_score|floatformat:1 }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         {% if booking.requirements %}
-        <div class="glass-card p-4 mb-4 border border-info border-opacity-20 bg-info bg-opacity-10">
-            <h5 class="fw-bold text-dark mb-3"><i class="bi bi-info-circle me-2"></i> Professional Note</h5>
-            <p class="text-dark small m-0">{{ booking.requirements }}</p>
+        <div class="glass-card p-4 mb-4 border border-white border-opacity-10 bg-black bg-opacity-20">
+            <h5 class="fw-bold text-white mb-3 small text-uppercase letter-spacing-1"><i
+                    class="bi bi-info-circle me-2"></i> Professional Note</h5>
+            <p class="text-white opacity-75 small m-0">{{ booking.requirements }}</p>
         </div>
         {% endif %}
 
         <!-- Progress/Workflow -->
         <div class="glass-card p-4 mb-4">
-            <h4 class="fw-bold mb-4">Job <span class="text-gradient">Timeline</span></h4>
+            <h4 class="fw-bold mb-4 text-white">Job <span class="text-gradient">Timeline</span></h4>
             <div class="timeline">
                 <div class="d-flex mb-4">
                     <div class="timeline-dot completed me-3"></div>
                     <div>
-                        <div class="fw-bold">Booking Scheduled</div>
+                        <div class="fw-bold text-white">Booking Scheduled</div>
                         <div class="text-muted small">{{ booking.created_at|date:"F j, Y, g:i a" }}</div>
                     </div>
                 </div>
 
-                {% if booking.status == 'CONFIRMED' or booking.status == 'COMPLETED' %}
+                {% if booking.status == 'CONFIRMED' or booking.status == 'COMPLETED' or booking.status == 'PROCESSING'
+                %}
+
                 <div class="d-flex mb-4">
                     <div class="timeline-dot completed me-3"></div>
                     <div>
-                        <div class="fw-bold">Pro Confirmed</div>
+                        <div class="fw-bold text-white">Pro Confirmed</div>
                     </div>
                 </div>
                 {% endif %}
@@ -68,7 +78,7 @@
                 <div class="d-flex mb-4">
                     <div class="timeline-dot completed me-3"></div>
                     <div>
-                        <div class="fw-bold">Service Completed</div>
+                        <div class="fw-bold text-white">Service Completed</div>
                     </div>
                 </div>
                 {% endif %}
@@ -79,30 +89,31 @@
         <div class="row g-4 mb-4">
             <div class="col-md-6">
                 <div class="glass-card h-100 p-4">
-                    <h5 class="fw-bold mb-3"><i class="bi bi-credit-card me-2 text-info"></i> Payment Info</h5>
+                    <h5 class="fw-bold mb-4 small text-uppercase letter-spacing-1 text-white"><i
+                            class="bi bi-credit-card me-2"></i> Payment Info</h5>
                     {% if payment and payment.payment_status == 'SUCCESS' %}
-                    <div class="p-3 rounded-4 bg-black bg-opacity-20 border border-success border-opacity-10">
+                    <div class="p-3 rounded-4 bg-black bg-opacity-40 border border-white border-opacity-10">
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted small">Status</span>
                             <span
-                                class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-20">Paid</span>
+                                class="badge bg-black bg-opacity-40 text-white border border-white border-opacity-20">Paid</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted small">Method</span>
-                            <span class="small fw-medium">{{ payment.payment_method }}</span>
+                            <span class="small fw-medium text-white">{{ payment.payment_method }}</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted small">Date Paid</span>
-                            <span class="small">{{ payment.paid_at|date:"M j, Y, g:i a" }}</span>
+                            <span class="small text-white-50">{{ payment.paid_at|date:"M j, Y, g:i a" }}</span>
                         </div>
-                        <hr class="border-white border-opacity-10 my-2">
+                        <hr class="border-white border-opacity-10 my-3">
                         <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-bold">Amount</span>
-                            <span class="h4 fw-bold m-0 text-success">&#8377;{{ payment.amount }}</span>
+                            <span class="fw-bold text-white-50 small text-uppercase">Total Amount</span>
+                            <span class="h4 fw-bold m-0 text-white">&#8377;{{ payment.amount }}</span>
                         </div>
                     </div>
                     {% else %}
-                    <div class="p-3 rounded-4 bg-black bg-opacity-20 border border-white border-opacity-5">
+                    <div class="p-3 rounded-4 bg-black bg-opacity-40 border border-white border-opacity-5">
                         <p class="text-muted small mb-3"><i class="bi bi-clock-history me-1"></i> Waiting for payment
                             completion.</p>
                         {% if user == booking.customer and booking.status == 'COMPLETED' %}
@@ -110,7 +121,7 @@
                             class="btn btn-premium w-100 rounded-pill">Complete Payment</a>
                         {% elif user == booking.professional.user %}
                         <div
-                            class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-10 w-100 py-2">
+                            class="badge bg-black bg-opacity-40 text-white border border-white border-opacity-10 w-100 py-2">
                             Settlement Pending</div>
                         {% endif %}
                     </div>
@@ -119,16 +130,20 @@
             </div>
             <div class="col-md-6">
                 <div class="glass-card h-100 p-4">
-                    <h5 class="fw-bold mb-3"><i class="bi bi-star me-2 text-warning"></i> Feedback</h5>
+                    <h5 class="fw-bold mb-4 small text-uppercase letter-spacing-1 text-white"><i
+                            class="bi bi-star me-2"></i> Feedback</h5>
                     {% if review %}
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="text-warning">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="text-white">
                             <i class="bi bi-star-fill"></i> {{ review.rating }}/5
                         </div>
+                        <div class="text-white-50">
+                            <i class="bi bi-shield-fill-check"></i> {{ review.safety_score }}/5
+                        </div>
                     </div>
-                    <p class="text-muted small italic">"{{ review.comment }}"</p>
+                    <p class="text-muted small font-italic">"{{ review.comment }}"</p>
                     {% else %}
-                    <p class="text-muted small mb-4">No feedback yet.</p>
+                    <p class="text-muted small mb-4">No feedback provided yet.</p>
                     {% if user == booking.customer and booking.status == 'COMPLETED' %}
                     {% if payment and payment.payment_status == 'SUCCESS' %}
                     <a href="{% url 'submit_review' booking.id %}"
@@ -144,25 +159,28 @@
             {% if user == booking.professional.user %}
             {% if booking.status == 'CONFIRMED' %}
             <a href="{% url 'update_booking_status' booking.id 'PROCESSING' %}"
-                class="btn btn-premium rounded-pill px-4 mb-3 d-block d-md-inline-block">Start Processing</a>
+                class="btn btn-premium rounded-pill px-5 mb-3 d-block d-md-inline-block">Start Processing</a>
             {% elif booking.status == 'PROCESSING' %}
             <a href="{% url 'update_booking_status' booking.id 'COMPLETED' %}"
-                class="btn btn-success rounded-pill px-4 mb-3 d-block d-md-inline-block">Complete Job</a>
+                class="btn btn-premium rounded-pill px-5 mb-3 d-block d-md-inline-block">Complete Job</a>
             {% endif %}
 
             {% if booking.status == 'CONFIRMED' or booking.status == 'PROCESSING' %}
             <a href="{% url 'update_job' booking.id %}"
-                class="btn btn-outline-light rounded-pill px-4 mb-3 d-block d-md-inline-block">Update Job & Notes</a>
+                class="btn btn-outline-light rounded-pill px-5 mb-3 d-block d-md-inline-block">Update Job & Notes</a>
             {% endif %}
             {% endif %}
 
-            {% if user == booking.customer %}
-            <a href="{% url 'customer_bookings' %}" class="btn btn-link text-muted"><i
-                    class="bi bi-arrow-left me-2"></i> Back to My Bookings</a>
-            {% else %}
-            <a href="{% url 'professional_bookings' %}" class="btn btn-link text-muted"><i
-                    class="bi bi-arrow-left me-2"></i> Back to Requests</a>
-            {% endif %}
+            <div class="mt-3">
+                {% if user == booking.customer %}
+                <a href="{% url 'customer_bookings' %}" class="btn btn-link text-white-50 text-decoration-none small"><i
+                        class="bi bi-arrow-left me-2"></i> Back to My Bookings</a>
+                {% else %}
+                <a href="{% url 'professional_bookings' %}"
+                    class="btn btn-link text-white-50 text-decoration-none small"><i class="bi bi-arrow-left me-2"></i>
+                    Back to Requests</a>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
@@ -180,22 +198,29 @@
         top: 0;
         bottom: 0;
         width: 1px;
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
     }
 
     .timeline-dot {
-        width: 12px;
-        height: 12px;
+        width: 14px;
+        height: 14px;
         border-radius: 50%;
-        background: #334155;
+        background: #1a1a1a;
+        border: 2px solid #333;
         position: relative;
         z-index: 2;
         margin-top: 6px;
     }
 
     .timeline-dot.completed {
-        background: #6366f1;
-        box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+        background: #ffffff;
+        border-color: #ffffff;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
     }
+
+    .letter-spacing-1 {
+        letter-spacing: 1px;
+    }
+</style>
 </style>
 {% endblock %}

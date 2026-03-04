@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en" style="color-scheme: dark;">
 
@@ -5,33 +6,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HomeFixr - Premium Home Services</title>
-    <!-- Google Fonts: Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Inter & Outfit -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap"
+        rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            --glass-bg: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.12);
-            --dark-bg: #0f172a;
+            --primary-gradient: linear-gradient(135deg, #ffffff 0%, #a3a3a3 100%);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --dark-bg: #000000;
             --input-bg: rgba(255, 255, 255, 0.05);
-            /* Added for better visibility */
-            --text-main: #f8fafc;
-            --text-muted: #cbd5e1;
-            /* Made lighter for better contrast */
+            --text-main: #ffffff;
+            --text-muted: #a3a3a3;
+            --accent-silver: #e5e5e5;
         }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--dark-bg);
-            background-image:
-                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 40%);
+            background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+            url('{% static "img/professional_bg.png" %}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             color: var(--text-main);
             min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        .navbar-brand {
+            font-family: 'Outfit', sans-serif;
         }
 
         /* Essential Fix for Dropdowns/Native UI */
@@ -39,14 +54,13 @@
         option,
         input,
         textarea {
-            background-color: var(--dark-bg) !important;
+            background-color: #0c0c0c !important;
             color: var(--text-main) !important;
             border-color: var(--glass-border) !important;
         }
 
         select option {
-            background-color: #1e293b;
-            /* Slightly lighter shade for contrast in dropdowns */
+            background-color: #1a1a1a;
             color: var(--text-main);
         }
 
@@ -55,74 +69,98 @@
         }
 
         .navbar {
-            background: rgba(15, 23, 42, 0.8) !important;
-            backdrop-filter: blur(12px);
+            background: rgba(0, 0, 0, 0.7) !important;
+            backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--glass-border);
-            padding: 1rem 2rem;
+            padding: 1.25rem 2rem;
         }
 
         .navbar-brand {
-            font-weight: 700;
-            font-size: 1.5rem;
-            background: var(--primary-gradient);
+            font-weight: 800;
+            font-size: 1.75rem;
+            letter-spacing: -0.5px;
+            background: #ffffff;
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .btn-premium {
-            background: var(--primary-gradient);
-            border: none;
-            color: white;
-            padding: 0.6rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            background: #ffffff;
+            border: 1px solid #ffffff;
+            color: #000000 !important;
+            padding: 0.75rem 2rem;
+            border-radius: 100px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
         .btn-premium:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.4);
+            background: transparent;
+            color: #ffffff !important;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-outline-light {
+            border: 1px solid var(--glass-border);
+            border-radius: 100px;
+            padding: 0.75rem 2rem;
+            transition: all 0.3s;
+        }
+
+        .btn-outline-light:hover {
+            background: #ffffff;
+            color: #000000 !important;
         }
 
         .glass-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(16px);
+            backdrop-filter: blur(24px);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8);
+            transition: transform 0.3s ease;
         }
 
         .form-control,
         .form-select {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--glass-border);
             color: white;
-            border-radius: 10px;
-            padding: 0.75rem 1rem;
+            border-radius: 14px;
+            padding: 1rem 1.25rem;
+            transition: all 0.3s;
         }
 
         .form-control:focus,
         .form-select:focus {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #a855f7;
+            background: rgba(255, 255, 255, 0.06);
+            border-color: #ffffff;
             color: white;
-            box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.2);
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05);
         }
 
         .text-gradient {
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, #ffffff 0%, #999999 100%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .alert {
-            border-radius: 12px;
-            border: none;
-            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+        }
+
+        .smaller {
+            font-size: 0.75rem;
         }
     </style>
 </head>
@@ -147,11 +185,13 @@
                     {% endif %}
                     <a href="{% url 'notifications' %}" class="btn btn-link text-light position-relative me-3">
                         <i class="bi bi-bell"></i>
+                        {% if unread_notifications_count > 0 %}
                         <span
                             class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
                             style="font-size: 0.6rem;">
-                            3
+                            {{ unread_notifications_count }}
                         </span>
+                        {% endif %}
                     </a>
 
                     <div class="dropdown">
@@ -229,7 +269,111 @@
         {% block content %}{% endblock %}
     </div>
 
+    <!-- Chatbot UI -->
+    <div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+        <button id="chatbot-toggle" class="btn btn-premium rounded-circle shadow-lg"
+            style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+            <i class="bi bi-chat-dots-fill fs-3"></i>
+        </button>
+        <div id="chatbot-window" class="glass-card shadow-lg d-none"
+            style="position: absolute; bottom: 80px; right: 0; width: 350px; height: 500px; display: flex; flex-direction: column; overflow: hidden; padding: 0;">
+            <div class="p-3 border-bottom border-white border-opacity-10 d-flex justify-content-between align-items-center"
+                style="background: var(--primary-gradient);">
+                <h5 class="m-0 text-white fw-bold"><i class="bi bi-tools me-2"></i>Repair Assistant</h5>
+                <button id="chatbot-close" class="btn btn-link text-white p-0"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div id="chatbot-messages" class="flex-grow-1 p-3"
+                style="overflow-y: auto; background: rgba(0,0,0,0.2); scroll-behavior: smooth;">
+                <div class="mb-3">
+                    <div class="p-2 rounded-3 bg-secondary bg-opacity-25" style="max-width: 85%;">
+                        <p class="m-0 small">Hello! I'm your HomeFixr repair assistant. How can I help you today? (e.g.,
+                            "How to fix a fuse?")</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-3 border-top border-white border-opacity-10">
+                <div class="input-group">
+                    <input type="text" id="chatbot-input" class="form-control" placeholder="Ask a question..."
+                        style="border-radius: 20px 0 0 20px;">
+                    <button id="chatbot-send" class="btn btn-premium" style="border-radius: 0 20px 20px 0;"><i
+                            class="bi bi-send-fill"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        const chatbotToggle = document.getElementById('chatbot-toggle');
+        const chatbotWindow = document.getElementById('chatbot-window');
+        const chatbotClose = document.getElementById('chatbot-close');
+        const chatbotMessages = document.getElementById('chatbot-messages');
+        const chatbotInput = document.getElementById('chatbot-input');
+        const chatbotSend = document.getElementById('chatbot-send');
+
+        chatbotToggle.addEventListener('click', () => {
+            chatbotWindow.classList.toggle('d-none');
+        });
+
+        chatbotClose.addEventListener('click', () => {
+            chatbotWindow.classList.add('d-none');
+        });
+
+        function addMessage(text, isUser = false) {
+            const div = document.createElement('div');
+            div.className = `mb-3 ${isUser ? 'text-end' : ''}`;
+            div.innerHTML = `
+                <div class="d-inline-block p-2 rounded-3 ${isUser ? 'bg-primary bg-opacity-50 text-white' : 'bg-secondary bg-opacity-25 text-light'}" style="max-width: 85%; word-wrap: break-word; text-align: left;">
+                    <div class="small">${isUser ? text : marked.parse(text)}</div>
+                </div>
+            `;
+            chatbotMessages.appendChild(div);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const message = chatbotInput.value.trim();
+            if (!message) return;
+
+            addMessage(message, true);
+            chatbotInput.value = '';
+
+            // Loading indicator
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'mb-3';
+            loadingDiv.innerHTML = '<div class="spinner-border spinner-border-sm text-info" role="status"></div>';
+            chatbotMessages.appendChild(loadingDiv);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+
+            try {
+                const response = await fetch('/chatbot/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+                const data = await response.json();
+                chatbotMessages.removeChild(loadingDiv);
+
+                if (data.response) {
+                    addMessage(data.response);
+                } else {
+                    addMessage("Sorry, I encountered an error: " + (data.error || "Unknown error"));
+                }
+            } catch (error) {
+                chatbotMessages.removeChild(loadingDiv);
+                addMessage("Sorry, something went wrong. Check your connection.");
+            }
+        }
+
+        chatbotSend.addEventListener('click', sendMessage);
+        chatbotInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
 </body>
 
 </html>

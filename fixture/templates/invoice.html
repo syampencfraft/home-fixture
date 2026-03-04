@@ -3,66 +3,80 @@
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow border-0" id="invoice-card">
-                <div class="card-body p-5">
-                    <div class="d-flex justify-content-between mb-5">
+        <div class="col-md-9 col-lg-8">
+            <div class="glass-card p-0 overflow-hidden" id="invoice-card">
+                <div class="p-5">
+                    <div
+                        class="d-flex justify-content-between align-items-start mb-5 pb-4 border-bottom border-white border-opacity-10">
                         <div>
-                            <h2 class="fw-bold text-primary mb-0">HomeFixr</h2>
-                            <p class="text-muted">Digital Service Invoice</p>
+                            <h1 class="fw-bold text-white mb-0 letter-spacing-1">HOMEFIXR</h1>
+                            <p class="text-white-50 m-0">Digital Service Invoice</p>
                         </div>
                         <div class="text-end">
-                            <h4 class="mb-0">Invoice #{{ invoice.invoice_number }}</h4>
-                            <p class="text-muted small">Date: {{ invoice.generated_at|date:"F j, Y" }}</p>
+                            <h4 class="mb-1 text-white">Invoice #{{ invoice.invoice_number }}</h4>
+                            <p class="text-white-50 small m-0">{{ invoice.generated_at|date:"F j, Y" }}</p>
                         </div>
                     </div>
 
                     <div class="row mb-5">
                         <div class="col-6">
-                            <p class="text-muted mb-1">Billed To:</p>
-                            <h5 class="mb-0">{{ booking.customer.username }}</h5>
-                            <p class="small text-muted">{{ booking.customer.email }}</p>
+                            <p class="text-muted small mb-1 text-uppercase fw-bold letter-spacing-1">Billed To</p>
+                            <h5 class="mb-1 text-white">{{ booking.customer.username }}</h5>
+                            <p class="small text-white-50">{{ booking.customer.email }}</p>
                         </div>
                         <div class="col-6 text-end">
-                            <p class="text-muted mb-1">Service Provider:</p>
-                            <h5 class="mb-0">{{ booking.professional.user.username }}</h5>
-                            <p class="small text-muted">{{ booking.professional.category.name }} Specialist</p>
+                            <p class="text-muted small mb-1 text-uppercase fw-bold letter-spacing-1">Service Provider
+                            </p>
+                            <h5 class="mb-1 text-white">{{ booking.professional.user.username }}</h5>
+                            <p class="small text-white-50">{{ booking.professional.category.name }} Specialist</p>
                         </div>
                     </div>
 
                     <div class="table-responsive mb-5">
-                        <table class="table">
-                            <thead class="bg-light">
+                        <table class="table table-borderless align-middle">
+                            <thead class="bg-white bg-opacity-5">
                                 <tr>
-                                    <th>Service Description</th>
-                                    <th class="text-end">Amount</th>
+                                    <th class="text-white py-3 ps-3 rounded-start border-0">Service Description</th>
+                                    <th class="text-white text-end py-3 pe-3 rounded-end border-0">Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <h6 class="mb-0">{{ booking.service.name }}</h6>
-                                        <small class="text-muted">Scheduled for {{ booking.booking_date|date:"M d, Y" }}
-                                            ({{ booking.time_slot }})</small>
+                                <tr class="border-bottom border-white border-opacity-5">
+                                    <td class="py-4 ps-3">
+                                        <h6 class="mb-1 text-white fw-bold">{{ booking.service.name }}</h6>
+                                        <div class="smaller text-white-50">
+                                            Scheduled for {{ booking.booking_date|date:"M d, Y" }}
+                                            ({{ booking.time_slot }})
+                                        </div>
                                     </td>
-                                    <td class="text-end fw-bold">${{ invoice.total_amount }}</td>
+                                    <td class="text-end py-4 pe-3 text-white fw-bold fs-5">₹{{ invoice.total_amount }}
+                                    </td>
                                 </tr>
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td class="text-end fw-bold">Total Amount Paid</td>
-                                    <td class="text-end h4 fw-bold text-primary">${{ invoice.total_amount }}</td>
-                                </tr>
-                            </tfoot>
                         </table>
                     </div>
 
-                    <div class="text-center mt-5">
-                        <p class="text-muted small">Thank you for choosing HomeFixr for your home needs!</p>
-                        <button onclick="window.print()" class="btn btn-outline-secondary btn-sm d-print-none">Print
-                            Invoice</button>
-                        <a href="{% url 'customer_bookings' %}" class="btn btn-primary btn-sm d-print-none">Back to
-                            Bookings</a>
+                    <div class="row justify-content-end mb-5">
+                        <div class="col-md-5">
+                            <div class="p-4 rounded-4 bg-white bg-opacity-5 border border-white border-opacity-10">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-white-50 fw-bold">Total Paid</span>
+                                    <span class="h2 fw-bold m-0 text-white">₹{{ invoice.total_amount }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-5 d-print-none">
+                        <p class="text-white-50 small mb-4">Thank you for choosing HomeFixr!</p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <button onclick="window.print()" class="btn btn-outline-light rounded-pill px-4">
+                                <i class="bi bi-printer me-2"></i>Print Invoice
+                            </button>
+                            <a href="{% url 'customer_bookings' %}" class="btn btn-premium rounded-pill px-4">
+                                Back to Bookings
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -71,26 +85,54 @@
 </div>
 
 <style>
+    .letter-spacing-1 {
+        letter-spacing: 2px;
+    }
+
     @media print {
 
         .navbar,
-        .btn-primary,
-        .btn-outline-secondary {
+        .btn,
+        .d-print-none {
             display: none !important;
         }
 
         body {
-            background-color: white !important;
+            background: white !important;
+            color: black !important;
+        }
+
+        .glass-card {
+            background: white !important;
+            border: 1px solid #000 !important;
+            color: black !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+        }
+
+        .text-white,
+        .text-white-50 {
+            color: black !important;
+        }
+
+        .border-white {
+            border-color: #000 !important;
+        }
+
+        .bg-white {
+            background: #eee !important;
         }
 
         .container {
             width: 100% !important;
             max-width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         #invoice-card {
-            box-shadow: none !important;
-            border: 1px solid #eee !important;
+            border-radius: 0 !important;
+            transform: none !important;
         }
     }
 </style>

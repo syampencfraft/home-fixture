@@ -2,58 +2,62 @@
 
 {% block content %}
 <div class="container py-5">
-    <div class="row">
+    <div class="row g-4">
         <div class="col-md-4">
-            <div class="card shadow-sm border-0 mb-4">
-                <div class="card-body">
-                    <h4 class="card-title mb-4">Upload Document</h4>
+            <div class="glass-card mb-4 overflow-hidden">
+                <div class="p-4">
+                    <h4 class="fw-bold mb-4 text-white">Upload Document</h4>
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Document Type</label>
-                            <select name="document_type" class="form-select" required>
-                                <option value="ID">Identity Document (Aadhar/PAN)</option>
-                                <option value="LICENSE">Trade License</option>
-                                <option value="CERTIFICATE">Skill Certificate</option>
+                        <div class="mb-4">
+                            <label class="form-label small fw-semibold text-muted">Document Type</label>
+                            <select name="document_type"
+                                class="form-select bg-white bg-opacity-5 border-white border-opacity-10 text-white"
+                                required>
+                                <option value="ID" class="bg-dark">Identity Document (Aadhar/PAN)</option>
+                                <option value="LICENSE" class="bg-dark">Trade License</option>
+                                <option value="CERTIFICATE" class="bg-dark">Skill Certificate</option>
                             </select>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Select File</label>
-                            <input type="file" name="document_file" class="form-control" required>
+                        <div class="mb-4">
+                            <label class="form-label small fw-semibold text-muted">Select File</label>
+                            <input type="file" name="document_file"
+                                class="form-control bg-white bg-opacity-5 border-white border-opacity-10 text-white"
+                                required>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Upload for Verification</button>
+                        <button type="submit" class="btn btn-premium w-100 py-3">Upload for Verification</button>
                     </form>
                 </div>
             </div>
         </div>
         <div class="col-md-8">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <h4 class="card-title mb-4">Uploaded Documents</h4>
+            <div class="glass-card overflow-hidden">
+                <div class="p-4">
+                    <h4 class="fw-bold mb-4 text-white">Uploaded Documents</h4>
                     <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead class="table-light">
+                        <table class="table table-borderless align-middle">
+                            <thead class="bg-white bg-opacity-5">
                                 <tr>
-                                    <th>Type</th>
-                                    <th>Status</th>
-                                    <th>Uploaded At</th>
+                                    <th class="text-white py-3 ps-3 rounded-start">Type</th>
+                                    <th class="text-white py-3">Status</th>
+                                    <th class="text-white py-3 pe-3 rounded-end">Uploaded At</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for doc in docs %}
-                                <tr>
-                                    <td>{{ doc.get_document_type_display }}</td>
+                                <tr class="border-bottom border-white border-opacity-5">
+                                    <td class="text-white ps-3">{{ doc.get_document_type_display }}</td>
                                     <td>
                                         <span
-                                            class="badge {% if doc.verification_status == 'APPROVED' %}bg-success{% elif doc.verification_status == 'REJECTED' %}bg-danger{% else %}bg-warning text-dark{% endif %}">
+                                            class="badge bg-white bg-opacity-10 text-white border border-white border-opacity-10 px-3 py-2 smaller text-uppercase letter-spacing-1">
                                             {{ doc.verification_status }}
                                         </span>
                                     </td>
-                                    <td>{{ doc.uploaded_at|date:"M d, Y" }}</td>
+                                    <td class="text-white-50 pe-3">{{ doc.uploaded_at|date:"M d, Y" }}</td>
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="3" class="text-center py-4 text-muted">No documents uploaded yet.</td>
+                                    <td colspan="3" class="text-center py-5 text-muted">No documents uploaded yet.</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -64,4 +68,24 @@
         </div>
     </div>
 </div>
+
+<style>
+    .letter-spacing-1 {
+        letter-spacing: 1px;
+    }
+
+    .btn-premium {
+        background: white;
+        color: black;
+        border: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-premium:hover {
+        background: #f0f0f0;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+    }
+</style>
 {% endblock %}

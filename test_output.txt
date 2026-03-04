@@ -1,0 +1,64 @@
+﻿python : Creating 
+test database for 
+alias 'default'...
+At line:1 char:1
++ python manage.py 
+test 
+fixture.tests_chatbot 
+2>&1 | Out-File 
+-FilePath ...
++ ~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~
+    + CategoryInfo    
+          : NotSpeci  
+  fied: (Creating t   
+ est d...as 'defau    
+lt'...:String) []    
+, RemoteException
+    + FullyQualifiedE 
+   rrorId : NativeCo  
+  mmandError
+ 
+
+Found 2 test(s).
+C:\Users\91953\Desktop
+\2026 projects\Home 
+fixture\Home fixture\f
+ixture\views.py:19: 
+FutureWarning: 
+
+All support for the 
+`google.generativeai` 
+package has ended. It 
+will no longer be 
+receiving 
+updates or bug fixes. 
+Please switch to the 
+`google.genai` 
+package as soon as 
+possible.
+See README for more 
+details:
+
+https://github.com/goo
+gle-gemini/deprecated-
+generative-ai-python/b
+lob/main/README.md
+
+  import 
+google.generativeai 
+as genai
+System check identified no issues (0 silenced).
+..
+----------------------
+----------------------
+----------------------
+----
+Ran 2 tests in 3.316s
+
+OK
+Destroying test 
+database for alias 
+'default'...
+
